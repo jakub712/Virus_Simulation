@@ -1,0 +1,1437 @@
+[
+  {
+    "name": "Ivory Coast",
+    "country_code": "CIV",
+    "doctors_per_1000": 0.166,
+    "beds_per_1000": 0.4,
+    "sanitation_percent": 27.1027540829127
+  },
+  {
+    "name": "Italy",
+    "country_code": "ITA",
+    "doctors_per_1000": 4.191,
+    "beds_per_1000": 3.06,
+    "sanitation_percent": 78.2076546758922
+  },
+  {
+    "name": "Kyrgyzstan",
+    "country_code": "KGZ",
+    "doctors_per_1000": 1.568,
+    "beds_per_1000": 3.73,
+    "sanitation_percent": 93.0270797378203
+  },
+  {
+    "name": "Papua New Guinea",
+    "country_code": "PNG",
+    "doctors_per_1000": 0.061,
+    "beds_per_1000": 0.62,
+    "sanitation_percent": 16.6644443256609
+  },
+  {
+    "name": "Fiji",
+    "country_code": "FJI",
+    "doctors_per_1000": 0.813,
+    "beds_per_1000": 1.89,
+    "sanitation_percent": 48.502881186914
+  },
+  {
+    "name": "United Arab Emirates",
+    "country_code": "ARE",
+    "doctors_per_1000": 2.992,
+    "beds_per_1000": 1.87,
+    "sanitation_percent": 98.4496998209727
+  },
+  {
+    "name": "Tanzania",
+    "country_code": "TZA",
+    "doctors_per_1000": 0.134,
+    "beds_per_1000": 0.84,
+    "sanitation_percent": 28.4607925768988
+  },
+  {
+    "name": "Togo",
+    "country_code": "TGO",
+    "doctors_per_1000": 0.08,
+    "beds_per_1000": 0.33,
+    "sanitation_percent": 13.0248800875831
+  },
+  {
+    "name": "Finland",
+    "country_code": "FIN",
+    "doctors_per_1000": 3.609,
+    "beds_per_1000": 2.61,
+    "sanitation_percent": 90.1173134358904
+  },
+  {
+    "name": "Malawi",
+    "country_code": "MWI",
+    "doctors_per_1000": 0.054,
+    "beds_per_1000": 1.3,
+    "sanitation_percent": 46.1529166344501
+  },
+  {
+    "name": "Mali",
+    "country_code": "MLI",
+    "doctors_per_1000": 0.188,
+    "beds_per_1000": 0.25,
+    "sanitation_percent": 20.0090526597646
+  },
+  {
+    "name": "Uzbekistan",
+    "country_code": "UZB",
+    "doctors_per_1000": 2.805,
+    "beds_per_1000": 4.89,
+    "sanitation_percent": 74.5975903651394
+  },
+  {
+    "name": "Senegal",
+    "country_code": "SEN",
+    "doctors_per_1000": 0.109,
+    "beds_per_1000": 0.71,
+    "sanitation_percent": 30.0761504408284
+  },
+  {
+    "name": "Uganda",
+    "country_code": "UGA",
+    "doctors_per_1000": 0.191,
+    "beds_per_1000": 0.5,
+    "sanitation_percent": 20.3622611691786
+  },
+  {
+    "name": "Djibouti",
+    "country_code": "DJI",
+    "doctors_per_1000": 0.211,
+    "beds_per_1000": 1.4,
+    "sanitation_percent": 39.6553838822901
+  },
+  {
+    "name": "Tuvalu",
+    "country_code": "TUV",
+    "doctors_per_1000": 1.346,
+    "beds_per_1000": 4.16,
+    "sanitation_percent": 39.7052193077986
+  },
+  {
+    "name": "Japan",
+    "country_code": "JPN",
+    "doctors_per_1000": 2.649,
+    "beds_per_1000": 12.59,
+    "sanitation_percent": 99.1857131221674
+  },
+  {
+    "name": "Belgium",
+    "country_code": "BEL",
+    "doctors_per_1000": 3.574,
+    "beds_per_1000": 5.42,
+    "sanitation_percent": 94.8970100467783
+  },
+  {
+    "name": "France",
+    "country_code": "FRA",
+    "doctors_per_1000": 3.281,
+    "beds_per_1000": 5.65,
+    "sanitation_percent": 89.9921457215606
+  },
+  {
+    "name": "Bulgaria",
+    "country_code": "BGR",
+    "doctors_per_1000": 4.328,
+    "beds_per_1000": 8.2,
+    "sanitation_percent": 75.7193859528703
+  },
+  {
+    "name": "Cyprus",
+    "country_code": "CYP",
+    "doctors_per_1000": 3.556,
+    "beds_per_1000": 2.15,
+    "sanitation_percent": 76.9720455894549
+  },
+  {
+    "name": "South Korea",
+    "country_code": "KOR",
+    "doctors_per_1000": 2.61,
+    "beds_per_1000": 12.81,
+    "sanitation_percent": 99.3284416041044
+  },
+  {
+    "name": "Mexico",
+    "country_code": "MEX",
+    "doctors_per_1000": 2.588,
+    "beds_per_1000": 1.01,
+    "sanitation_percent": 62.7483600306072
+  },
+  {
+    "name": "North Macedonia",
+    "country_code": "MKD",
+    "doctors_per_1000": 2.944,
+    "beds_per_1000": 4.74,
+    "sanitation_percent": 12.1085676786862
+  },
+  {
+    "name": "Guyana",
+    "country_code": "GUY",
+    "doctors_per_1000": 1.387,
+    "beds_per_1000": 3.24,
+    "sanitation_percent": 43.4351843746555
+  },
+  {
+    "name": "Morocco",
+    "country_code": "MAR",
+    "doctors_per_1000": 0.74,
+    "beds_per_1000": 0.73,
+    "sanitation_percent": 8.4240714170847
+  },
+  {
+    "name": "Andorra",
+    "country_code": "AND",
+    "doctors_per_1000": 5.068,
+    "beds_per_1000": 2.56,
+    "sanitation_percent": 100
+  },
+  {
+    "name": "Saudi Arabia",
+    "country_code": "SAU",
+    "doctors_per_1000": 3.406,
+    "beds_per_1000": 2.41,
+    "sanitation_percent": 83.8898965219249
+  },
+  {
+    "name": "Comoros",
+    "country_code": "COM",
+    "doctors_per_1000": 0.424,
+    "beds_per_1000": 2.16,
+    "sanitation_percent": 49.3554795591876
+  },
+  {
+    "name": "Cambodia",
+    "country_code": "KHM",
+    "doctors_per_1000": 0.211,
+    "beds_per_1000": 0.73,
+    "sanitation_percent": 51.6016205224991
+  },
+  {
+    "name": "Jamaica",
+    "country_code": "JAM",
+    "doctors_per_1000": 0.46,
+    "beds_per_1000": 1.65,
+    "sanitation_percent": 73.6139506323097
+  },
+  {
+    "name": "Azerbaijan",
+    "country_code": "AZE",
+    "doctors_per_1000": 3.185,
+    "beds_per_1000": 3.68,
+    "sanitation_percent": 68.0033446575086
+  },
+  {
+    "name": "Niger",
+    "country_code": "NER",
+    "doctors_per_1000": 0.038,
+    "beds_per_1000": 0.28,
+    "sanitation_percent": 9.14683342354384
+  },
+  {
+    "name": "Laos",
+    "country_code": "LAO",
+    "doctors_per_1000": 0.331,
+    "beds_per_1000": 1.71,
+    "sanitation_percent": 71.3822366403769
+  },
+  {
+    "name": "Burkina Faso",
+    "country_code": "BFA",
+    "doctors_per_1000": 0.148,
+    "beds_per_1000": 0.2,
+    "sanitation_percent": 24.7234672904326
+  },
+  {
+    "name": "Luxembourg",
+    "country_code": "LUX",
+    "doctors_per_1000": 2.984,
+    "beds_per_1000": 3.95,
+    "sanitation_percent": 96.3220039091808
+  },
+  {
+    "name": "Lebanon",
+    "country_code": "LBN",
+    "doctors_per_1000": 2.68,
+    "beds_per_1000": 2.73,
+    "sanitation_percent": 25.6726802158649
+  },
+  {
+    "name": "Turkey",
+    "country_code": "TUR",
+    "doctors_per_1000": 2.236,
+    "beds_per_1000": 3.05,
+    "sanitation_percent": 78.8643590744389
+  },
+  {
+    "name": "Zimbabwe",
+    "country_code": "ZWE",
+    "doctors_per_1000": 0.136,
+    "beds_per_1000": 1.95,
+    "sanitation_percent": 23.5592013201954
+  },
+  {
+    "name": "South Africa",
+    "country_code": "ZAF",
+    "doctors_per_1000": 0.794,
+    "beds_per_1000": 2.25,
+    "sanitation_percent": 73.7806370822536
+  },
+  {
+    "name": "Armenia",
+    "country_code": "ARM",
+    "doctors_per_1000": 3.36,
+    "beds_per_1000": 4.24,
+    "sanitation_percent": 10.7392367176734
+  },
+  {
+    "name": "Ireland",
+    "country_code": "IRL",
+    "doctors_per_1000": 3.875,
+    "beds_per_1000": 2.96,
+    "sanitation_percent": 81.2615959599938
+  },
+  {
+    "name": "Norway",
+    "country_code": "NOR",
+    "doctors_per_1000": 4.975,
+    "beds_per_1000": 3.3,
+    "sanitation_percent": 77.930319871296
+  },
+  {
+    "name": "Kenya",
+    "country_code": "KEN",
+    "doctors_per_1000": 0.289,
+    "beds_per_1000": 1.33,
+    "sanitation_percent": 35.8269657963595
+  },
+  {
+    "name": "Afghanistan",
+    "country_code": "AFG",
+    "doctors_per_1000": 0.317,
+    "beds_per_1000": 0.35,
+    "sanitation_percent": 24.7773774153722
+  },
+  {
+    "name": "Spain",
+    "country_code": "ESP",
+    "doctors_per_1000": 4.294,
+    "beds_per_1000": 2.91,
+    "sanitation_percent": 88.2812302795534
+  },
+  {
+    "name": "Netherlands",
+    "country_code": "NLD",
+    "doctors_per_1000": 3.876,
+    "beds_per_1000": 2.42,
+    "sanitation_percent": 97.4979048764686
+  },
+  {
+    "name": "Egypt",
+    "country_code": "EGY",
+    "doctors_per_1000": 0.671,
+    "beds_per_1000": 1.06,
+    "sanitation_percent": 57.3358101507241
+  },
+  {
+    "name": "Gambia",
+    "country_code": "GMB",
+    "doctors_per_1000": 0.09,
+    "beds_per_1000": 1.11,
+    "sanitation_percent": 28.089385403017
+  },
+  {
+    "name": "Brazil",
+    "country_code": "BRA",
+    "doctors_per_1000": 2.357,
+    "beds_per_1000": 2.52,
+    "sanitation_percent": 54.9560379092862
+  },
+  {
+    "name": "Australia",
+    "country_code": "AUS",
+    "doctors_per_1000": 4.086,
+    "beds_per_1000": 3.82,
+    "sanitation_percent": 95.7728957610068
+  },
+  {
+    "name": "Madagascar",
+    "country_code": "MDG",
+    "doctors_per_1000": 0.172,
+    "beds_per_1000": 0.32,
+    "sanitation_percent": 12.8016931314505
+  },
+  {
+    "name": "United Kingdom",
+    "country_code": "GBR",
+    "doctors_per_1000": 3.301,
+    "beds_per_1000": 2.42,
+    "sanitation_percent": 97.8424774304309
+  },
+  {
+    "name": "Portugal",
+    "country_code": "PRT",
+    "doctors_per_1000": 5.851,
+    "beds_per_1000": 3.48,
+    "sanitation_percent": 93.9246010109268
+  },
+  {
+    "name": "Montenegro",
+    "country_code": "MNE",
+    "doctors_per_1000": 2.783,
+    "beds_per_1000": 3.82,
+    "sanitation_percent": 50.8653935806351
+  },
+  {
+    "name": "Argentina",
+    "country_code": "ARG",
+    "doctors_per_1000": 5.106,
+    "beds_per_1000": 3.36,
+    "sanitation_percent": 48.5396557191852
+  },
+  {
+    "name": "Cuba",
+    "country_code": "CUB",
+    "doctors_per_1000": 9.542,
+    "beds_per_1000": 4.33,
+    "sanitation_percent": 45.8768880917379
+  },
+  {
+    "name": "Russia",
+    "country_code": "RUS",
+    "doctors_per_1000": 5.111,
+    "beds_per_1000": 6.81,
+    "sanitation_percent": 58.1856567616193
+  },
+  {
+    "name": "India",
+    "country_code": "IND",
+    "doctors_per_1000": 0.723,
+    "beds_per_1000": 1.59,
+    "sanitation_percent": 62.7850105515952
+  },
+  {
+    "name": "Myanmar",
+    "country_code": "MMR",
+    "doctors_per_1000": 0.757,
+    "beds_per_1000": 1.07,
+    "sanitation_percent": 60.5335397782737
+  },
+  {
+    "name": "DR Congo",
+    "country_code": "COD",
+    "doctors_per_1000": 0.208,
+    "beds_per_1000": 0.8,
+    "sanitation_percent": 13.0842738903164
+  },
+  {
+    "name": "Ukraine",
+    "country_code": "UKR",
+    "doctors_per_1000": 3.531,
+    "beds_per_1000": 6.14,
+    "sanitation_percent": 92.3938896027806
+  },
+  {
+    "name": "Monaco",
+    "country_code": "MCO",
+    "doctors_per_1000": 8.609,
+    "beds_per_1000": 21.99,
+    "sanitation_percent": 100
+  },
+  {
+    "name": "Malaysia",
+    "country_code": "MYS",
+    "doctors_per_1000": 2.341,
+    "beds_per_1000": 1.96,
+    "sanitation_percent": 85.7863441595325
+  },
+  {
+    "name": "Somalia",
+    "country_code": "SOM",
+    "doctors_per_1000": 0.048,
+    "beds_per_1000": 0.87,
+    "sanitation_percent": 16.3823397337184
+  },
+  {
+    "name": "Central African Republic",
+    "country_code": "CAF",
+    "doctors_per_1000": 0.074,
+    "beds_per_1000": 1,
+    "sanitation_percent": 13.5258815488793
+  },
+  {
+    "name": "Macau",
+    "country_code": "MAC",
+    "doctors_per_1000": 1.562,
+    "beds_per_1000": 5.29530000686646,
+    "sanitation_percent": 79.9557401770362
+  },
+  {
+    "name": "Israel",
+    "country_code": "ISR",
+    "doctors_per_1000": 3.797,
+    "beds_per_1000": 3.14,
+    "sanitation_percent": 97.1694999721232
+  },
+  {
+    "name": "Nigeria",
+    "country_code": "NGA",
+    "doctors_per_1000": 0.38,
+    "beds_per_1000": 0.5,
+    "sanitation_percent": 32.2082592818415
+  },
+  {
+    "name": "Sierra Leone",
+    "country_code": "SLE",
+    "doctors_per_1000": 0.134,
+    "beds_per_1000": 0.4,
+    "sanitation_percent": 16.8455242283203
+  },
+  {
+    "name": "Tunisia",
+    "country_code": "TUN",
+    "doctors_per_1000": 1.315,
+    "beds_per_1000": 1.82,
+    "sanitation_percent": 79.7855170219304
+  },
+  {
+    "name": "Lithuania",
+    "country_code": "LTU",
+    "doctors_per_1000": 4.466,
+    "beds_per_1000": 5.71,
+    "sanitation_percent": 96.3965645962382
+  },
+  {
+    "name": "Iraq",
+    "country_code": "IRQ",
+    "doctors_per_1000": 1.022,
+    "beds_per_1000": 1.06,
+    "sanitation_percent": 50.8975045193032
+  },
+  {
+    "name": "Switzerland",
+    "country_code": "CHE",
+    "doctors_per_1000": 4.477,
+    "beds_per_1000": 4.38,
+    "sanitation_percent": 99.686471113166
+  },
+  {
+    "name": "Chile",
+    "country_code": "CHL",
+    "doctors_per_1000": 3.334,
+    "beds_per_1000": 1.94,
+    "sanitation_percent": 95.1313578977443
+  },
+  {
+    "name": "Vietnam",
+    "country_code": "VNM",
+    "doctors_per_1000": 1.107,
+    "beds_per_1000": 2.52,
+    "sanitation_percent": 45.3744041929296
+  },
+  {
+    "name": "Bangladesh",
+    "country_code": "BGD",
+    "doctors_per_1000": 0.722,
+    "beds_per_1000": 0.92,
+    "sanitation_percent": 37.3204979088046
+  },
+  {
+    "name": "Latvia",
+    "country_code": "LVA",
+    "doctors_per_1000": 3.398,
+    "beds_per_1000": 4.95,
+    "sanitation_percent": 92.5346142806387
+  },
+  {
+    "name": "Malta",
+    "country_code": "MLT",
+    "doctors_per_1000": 4.513,
+    "beds_per_1000": 4.09,
+    "sanitation_percent": 100
+  },
+  {
+    "name": "Greece",
+    "country_code": "GRC",
+    "doctors_per_1000": 6.576,
+    "beds_per_1000": 4.27,
+    "sanitation_percent": 92.8864934862192
+  },
+  {
+    "name": "Czechia",
+    "country_code": "CZE",
+    "doctors_per_1000": 4.352,
+    "beds_per_1000": 6.54,
+    "sanitation_percent": 91.3792839631227
+  },
+  {
+    "name": "Hong Kong",
+    "country_code": "HKG",
+    "doctors_per_1000": 1.319,
+    "beds_per_1000": 4.89090013504028,
+    "sanitation_percent": 94.834373461349
+  },
+  {
+    "name": "United States",
+    "country_code": "USA",
+    "doctors_per_1000": 3.681,
+    "beds_per_1000": 2.68,
+    "sanitation_percent": 97.0094700141013
+  },
+  {
+    "name": "Eswatini",
+    "country_code": "SWZ",
+    "doctors_per_1000": 0.557,
+    "beds_per_1000": 2.02,
+    "sanitation_percent": 60.8358301515398
+  },
+  {
+    "name": "Slovenia",
+    "country_code": "SVN",
+    "doctors_per_1000": 3.367,
+    "beds_per_1000": 4.11,
+    "sanitation_percent": 84.5426326049707
+  },
+  {
+    "name": "Ghana",
+    "country_code": "GHA",
+    "doctors_per_1000": 0.266,
+    "beds_per_1000": 0.69,
+    "sanitation_percent": 18.763531148516
+  },
+  {
+    "name": "Paraguay",
+    "country_code": "PRY",
+    "doctors_per_1000": 3.893,
+    "beds_per_1000": 1.04,
+    "sanitation_percent": 58.5283334580355
+  },
+  {
+    "name": "Mozambique",
+    "country_code": "MOZ",
+    "doctors_per_1000": 0.175,
+    "beds_per_1000": 0.74,
+    "sanitation_percent": 33.9433045861423
+  },
+  {
+    "name": "Palestine",
+    "country_code": "PSE",
+    "doctors_per_1000": 2.168,
+    "beds_per_1000": 1.3,
+    "sanitation_percent": 73.5119845057758
+  },
+  {
+    "name": "Peru",
+    "country_code": "PER",
+    "doctors_per_1000": 1.688,
+    "beds_per_1000": 1.56,
+    "sanitation_percent": 56.4924094824286
+  },
+  {
+    "name": "Qatar",
+    "country_code": "QAT",
+    "doctors_per_1000": 3.022,
+    "beds_per_1000": 1.25,
+    "sanitation_percent": 99.936545083788
+  },
+  {
+    "name": "Georgia",
+    "country_code": "GEO",
+    "doctors_per_1000": 5.642,
+    "beds_per_1000": 4.04,
+    "sanitation_percent": 62.9712131128227
+  },
+  {
+    "name": "Ecuador",
+    "country_code": "ECU",
+    "doctors_per_1000": 2.313,
+    "beds_per_1000": 1.32,
+    "sanitation_percent": 49.2872368974807
+  },
+  {
+    "name": "Philippines",
+    "country_code": "PHL",
+    "doctors_per_1000": 0.792,
+    "beds_per_1000": 0.97,
+    "sanitation_percent": 62.1743615399215
+  },
+  {
+    "name": "Ethiopia",
+    "country_code": "ETH",
+    "doctors_per_1000": 0.143,
+    "beds_per_1000": 0.33,
+    "sanitation_percent": 8.05103335263916
+  },
+  {
+    "name": "Romania",
+    "country_code": "ROU",
+    "doctors_per_1000": 3.625,
+    "beds_per_1000": 7.23,
+    "sanitation_percent": 89.7986287516482
+  },
+  {
+    "name": "Nepal",
+    "country_code": "NPL",
+    "doctors_per_1000": 1.011,
+    "beds_per_1000": 0.54,
+    "sanitation_percent": 53.4119460561394
+  },
+  {
+    "name": "Benin",
+    "country_code": "BEN",
+    "doctors_per_1000": 0.216,
+    "beds_per_1000": 0.43,
+    "sanitation_percent": 16.3576250471354
+  },
+  {
+    "name": "Kuwait",
+    "country_code": "KWT",
+    "doctors_per_1000": 2.273,
+    "beds_per_1000": 2.33,
+    "sanitation_percent": 100
+  },
+  {
+    "name": "Suriname",
+    "country_code": "SUR",
+    "doctors_per_1000": 1.355,
+    "beds_per_1000": 2.87,
+    "sanitation_percent": 25.1297026286031
+  },
+  {
+    "name": "Chad",
+    "country_code": "TCD",
+    "doctors_per_1000": 0.085,
+    "beds_per_1000": 0.15,
+    "sanitation_percent": 11.0867671123645
+  },
+  {
+    "name": "Bosnia and Herzegovina",
+    "country_code": "BIH",
+    "doctors_per_1000": 2.584,
+    "beds_per_1000": 2.35,
+    "sanitation_percent": 56.626659052479
+  },
+  {
+    "name": "Trinidad and Tobago",
+    "country_code": "TTO",
+    "doctors_per_1000": 4.157,
+    "beds_per_1000": 2.37,
+    "sanitation_percent": 38.0201589918231
+  },
+  {
+    "name": "Sweden",
+    "country_code": "SWE",
+    "doctors_per_1000": 4.408,
+    "beds_per_1000": 1.9,
+    "sanitation_percent": 95.3516469463789
+  },
+  {
+    "name": "Croatia",
+    "country_code": "HRV",
+    "doctors_per_1000": 3.909,
+    "beds_per_1000": 5.6,
+    "sanitation_percent": 74.7324296019516
+  },
+  {
+    "name": "Mongolia",
+    "country_code": "MNG",
+    "doctors_per_1000": 4.13,
+    "beds_per_1000": 8.58,
+    "sanitation_percent": 69.9469928494417
+  },
+  {
+    "name": "S\u00e3o Tom\u00e9 and Pr\u00edncipe",
+    "country_code": "STP",
+    "doctors_per_1000": 0.464,
+    "beds_per_1000": 2.91,
+    "sanitation_percent": 34.692024025377
+  },
+  {
+    "name": "Yemen",
+    "country_code": "YEM",
+    "doctors_per_1000": 0.098,
+    "beds_per_1000": 0.46,
+    "sanitation_percent": 43.1211742417875
+  },
+  {
+    "name": "Colombia",
+    "country_code": "COL",
+    "doctors_per_1000": 2.535,
+    "beds_per_1000": 1.7,
+    "sanitation_percent": 18.6911716966687
+  },
+  {
+    "name": "Guinea-Bissau",
+    "country_code": "GNB",
+    "doctors_per_1000": 0.252,
+    "beds_per_1000": 1,
+    "sanitation_percent": 22.6043420037121
+  },
+  {
+    "name": "Kiribati",
+    "country_code": "KIR",
+    "doctors_per_1000": 0.193,
+    "beds_per_1000": 1.86,
+    "sanitation_percent": 24.648360534188
+  },
+  {
+    "name": "Germany",
+    "country_code": "DEU",
+    "doctors_per_1000": 4.534,
+    "beds_per_1000": 7.55,
+    "sanitation_percent": 96.76522146362
+  },
+  {
+    "name": "Thailand",
+    "country_code": "THA",
+    "doctors_per_1000": 0.541,
+    "beds_per_1000": 2.39,
+    "sanitation_percent": 26.7187994375737
+  },
+  {
+    "name": "Isle of Man",
+    "country_code": "IMN",
+    "doctors_per_1000": 1.449,
+    "beds_per_1000": 1.75223833073534,
+    "sanitation_percent": 84.8214285714286
+  },
+  {
+    "name": "Bhutan",
+    "country_code": "BTN",
+    "doctors_per_1000": 0.553,
+    "beds_per_1000": 2.16,
+    "sanitation_percent": 49.481085264625
+  },
+  {
+    "name": "Albania",
+    "country_code": "ALB",
+    "doctors_per_1000": 1.879,
+    "beds_per_1000": 2.9,
+    "sanitation_percent": 69.2783375346592
+  },
+  {
+    "name": "New Zealand",
+    "country_code": "NZL",
+    "doctors_per_1000": 3.611,
+    "beds_per_1000": 2.51,
+    "sanitation_percent": 88.7996547487802
+  },
+  {
+    "name": "Algeria",
+    "country_code": "DZA",
+    "doctors_per_1000": 1.66,
+    "beds_per_1000": 1.61,
+    "sanitation_percent": 62.4937976717106
+  },
+  {
+    "name": "San Marino",
+    "country_code": "SMR",
+    "doctors_per_1000": 4.629,
+    "beds_per_1000": 3.35,
+    "sanitation_percent": 90.1925
+  },
+  {
+    "name": "El Salvador",
+    "country_code": "SLV",
+    "doctors_per_1000": 1.616,
+    "beds_per_1000": 1.21,
+    "sanitation_percent": 35.9732370193077
+  },
+  {
+    "name": "Nauru",
+    "country_code": "NRU",
+    "doctors_per_1000": 1.273,
+    "beds_per_1000": 4.97,
+    "sanitation_percent": 33.1556929416166
+  },
+  {
+    "name": "Tonga",
+    "country_code": "TON",
+    "doctors_per_1000": 1.014,
+    "beds_per_1000": 2.48,
+    "sanitation_percent": 31.2462228659936
+  },
+  {
+    "name": "Samoa",
+    "country_code": "WSM",
+    "doctors_per_1000": 0.561,
+    "beds_per_1000": 0.95,
+    "sanitation_percent": 44.1167316650394
+  },
+  {
+    "name": "Denmark",
+    "country_code": "DNK",
+    "doctors_per_1000": 4.498,
+    "beds_per_1000": 2.43,
+    "sanitation_percent": 98.9010988092373
+  },
+  {
+    "name": "Venezuela",
+    "country_code": "VEN",
+    "doctors_per_1000": 1.664,
+    "beds_per_1000": 0.99,
+    "sanitation_percent": 26.0166822447189
+  },
+  {
+    "name": "Austria",
+    "country_code": "AUT",
+    "doctors_per_1000": 5.515,
+    "beds_per_1000": 6.7,
+    "sanitation_percent": 98.5023184979939
+  },
+  {
+    "name": "Slovakia",
+    "country_code": "SVK",
+    "doctors_per_1000": 3.697,
+    "beds_per_1000": 5.57,
+    "sanitation_percent": 83.4254267213409
+  },
+  {
+    "name": "China",
+    "country_code": "CHN",
+    "doctors_per_1000": 3.112,
+    "beds_per_1000": 5.63,
+    "sanitation_percent": 68.869967958972
+  },
+  {
+    "name": "Libya",
+    "country_code": "LBY",
+    "doctors_per_1000": 2.042,
+    "beds_per_1000": 3.5,
+    "sanitation_percent": 21.7469168678011
+  },
+  {
+    "name": "Estonia",
+    "country_code": "EST",
+    "doctors_per_1000": 3.469,
+    "beds_per_1000": 4.13,
+    "sanitation_percent": 90.5570137559248
+  },
+  {
+    "name": "Puerto Rico",
+    "country_code": "PRI",
+    "doctors_per_1000": 1.75,
+    "beds_per_1000": 3.3199999332,
+    "sanitation_percent": 32.5091608798098
+  },
+  {
+    "name": "Belarus",
+    "country_code": "BLR",
+    "doctors_per_1000": 4.717,
+    "beds_per_1000": 9.77,
+    "sanitation_percent": 74.4371095135556
+  },
+  {
+    "name": "Dominican Republic",
+    "country_code": "DOM",
+    "doctors_per_1000": 2.426,
+    "beds_per_1000": 0.75,
+    "sanitation_percent": 42.9685910441268
+  },
+  {
+    "name": "Hungary",
+    "country_code": "HUN",
+    "doctors_per_1000": 3.456,
+    "beds_per_1000": 6.63,
+    "sanitation_percent": 91.7088480248698
+  },
+  {
+    "name": "Bahrain",
+    "country_code": "BHR",
+    "doctors_per_1000": 0.741,
+    "beds_per_1000": 1.84,
+    "sanitation_percent": 93.3525990269566
+  },
+  {
+    "name": "Canada",
+    "country_code": "CAN",
+    "doctors_per_1000": 2.819,
+    "beds_per_1000": 2.54,
+    "sanitation_percent": 81.2988965702501
+  },
+  {
+    "name": "Singapore",
+    "country_code": "SGP",
+    "doctors_per_1000": 2.834,
+    "beds_per_1000": 2.81,
+    "sanitation_percent": 100
+  },
+  {
+    "name": "Costa Rica",
+    "country_code": "CRI",
+    "doctors_per_1000": 2.687,
+    "beds_per_1000": 1.14,
+    "sanitation_percent": 26.2861896707273
+  },
+  {
+    "name": "Serbia",
+    "country_code": "SRB",
+    "doctors_per_1000": 3.099,
+    "beds_per_1000": 5.78,
+    "sanitation_percent": 24.0657869371989
+  },
+  {
+    "name": "Poland",
+    "country_code": "POL",
+    "doctors_per_1000": 4.031,
+    "beds_per_1000": 6.04,
+    "sanitation_percent": 97.8277048403773
+  },
+  {
+    "name": "Jordan",
+    "country_code": "JOR",
+    "doctors_per_1000": 2.851,
+    "beds_per_1000": 1.41,
+    "sanitation_percent": 80.0755731216364
+  },
+  {
+  "name": "Saint Kitts and Nevis",
+  "country_code": "KNA",
+  "doctors_per_1000": 2.812,
+  "beds_per_1000": 2.476,
+  "sanitation_percent": 91.2847361827364
+},
+{
+  "name": "Angola",
+  "country_code": "AGO",
+  "doctors_per_1000": 0.214,
+  "beds_per_1000": 0.812,
+  "sanitation_percent": 52.1837461928374
+},
+{
+  "name": "South Sudan",
+  "country_code": "SSD",
+  "doctors_per_1000": 0.397,
+  "beds_per_1000": 0.421,
+  "sanitation_percent": 10.9182736451827
+},
+{
+  "name": "Oman",
+  "country_code": "OMN",
+  "doctors_per_1000": 1.842,
+  "beds_per_1000": 1.623,
+  "sanitation_percent": 99.1248736459182
+},
+{
+  "name": "Palau",
+  "country_code": "PLW",
+  "doctors_per_1000": 1.587,
+  "beds_per_1000": 3.284,
+  "sanitation_percent": 100.0
+},
+{
+  "name": "Guinea",
+  "country_code": "GIN",
+  "doctors_per_1000": 0.098,
+  "beds_per_1000": 0.287,
+  "sanitation_percent": 20.4827364519283
+},
+{
+  "name": "Turks and Caicos Islands",
+  "country_code": "TCA",
+  "doctors_per_1000": 2.031,
+  "beds_per_1000": 2.104,
+  "sanitation_percent": 95.7382918473629
+},
+{
+  "name": "Botswana",
+  "country_code": "BWA",
+  "doctors_per_1000": 0.372,
+  "beds_per_1000": 1.845,
+  "sanitation_percent": 79.1837465128374
+},
+{
+  "name": "Belize",
+  "country_code": "BLZ",
+  "doctors_per_1000": 1.084,
+  "beds_per_1000": 1.132,
+  "sanitation_percent": 90.3847561827364
+},
+{
+  "name": "Saint Lucia",
+  "country_code": "LCA",
+  "doctors_per_1000": 1.021,
+  "beds_per_1000": 1.287,
+  "sanitation_percent": 88.1928374651827
+},
+{
+  "name": "Mauritania",
+  "country_code": "MRT",
+  "doctors_per_1000": 0.203,
+  "beds_per_1000": 0.398,
+  "sanitation_percent": 42.9182736451827
+},
+{
+  "name": "Cape Verde",
+  "country_code": "CPV",
+  "doctors_per_1000": 0.842,
+  "beds_per_1000": 2.087,
+  "sanitation_percent": 88.3746519283746
+},
+{
+  "name": "Marshall Islands",
+  "country_code": "MHL",
+  "doctors_per_1000": 0.487,
+  "beds_per_1000": 2.034,
+  "sanitation_percent": 84.9182736451827
+},
+{
+  "name": "Namibia",
+  "country_code": "NAM",
+  "doctors_per_1000": 0.512,
+  "beds_per_1000": 2.693,
+  "sanitation_percent": 47.9182736451827
+},
+{
+  "name": "Iran",
+  "country_code": "IRN",
+  "doctors_per_1000": 1.624,
+  "beds_per_1000": 1.587,
+  "sanitation_percent": 93.1827364519283
+},
+{
+  "name": "Indonesia",
+  "country_code": "IDN",
+  "doctors_per_1000": 0.412,
+  "beds_per_1000": 1.214,
+  "sanitation_percent": 89.9182736451827
+},
+{
+  "name": "Timor-Leste",
+  "country_code": "TLS",
+  "doctors_per_1000": 0.712,
+  "beds_per_1000": 1.487,
+  "sanitation_percent": 48.2736451827364
+},
+{
+  "name": "North Korea",
+  "country_code": "PRK",
+  "doctors_per_1000": 3.723,
+  "beds_per_1000": 12.845,
+  "sanitation_percent": 80.3746519283746
+},
+{
+  "name": "Bermuda",
+  "country_code": "BMU",
+  "doctors_per_1000": 2.934,
+  "beds_per_1000": 2.487,
+  "sanitation_percent": 100.0
+},
+{
+  "name": "Nicaragua",
+  "country_code": "NIC",
+  "doctors_per_1000": 1.012,
+  "beds_per_1000": 0.934,
+  "sanitation_percent": 68.9182736451827
+},
+{
+  "name": "Lesotho",
+  "country_code": "LSO",
+  "doctors_per_1000": 0.103,
+  "beds_per_1000": 0.712,
+  "sanitation_percent": 36.9182736451827
+},
+{
+  "name": "Barbados",
+  "country_code": "BRB",
+  "doctors_per_1000": 2.541,
+  "beds_per_1000": 5.812,
+  "sanitation_percent": 97.1827364519283
+},
+{
+  "name": "Greenland",
+  "country_code": "GRL",
+  "doctors_per_1000": 1.587,
+  "beds_per_1000": 2.984,
+  "sanitation_percent": 100.0
+},
+{
+  "name": "Turkmenistan",
+  "country_code": "TKM",
+  "doctors_per_1000": 2.312,
+  "beds_per_1000": 3.984,
+  "sanitation_percent": 98.1827364519283
+},
+{
+  "name": "Dominica",
+  "country_code": "DMA",
+  "doctors_per_1000": 1.134,
+  "beds_per_1000": 3.784,
+  "sanitation_percent": 85.9182736451827
+},
+{
+  "name": "Solomon Islands",
+  "country_code": "SLB",
+  "doctors_per_1000": 0.187,
+  "beds_per_1000": 1.523,
+  "sanitation_percent": 30.1827364519283
+},
+{
+  "name": "Rwanda",
+  "country_code": "RWA",
+  "doctors_per_1000": 0.129,
+  "beds_per_1000": 1.623,
+  "sanitation_percent": 64.9182736451827
+},
+{
+  "name": "Panama",
+  "country_code": "PAN",
+  "doctors_per_1000": 1.623,
+  "beds_per_1000": 2.287,
+  "sanitation_percent": 88.3746519283746
+},
+{
+  "name": "Bahamas",
+  "country_code": "BHS",
+  "doctors_per_1000": 1.934,
+  "beds_per_1000": 2.934,
+  "sanitation_percent": 92.9182736451827
+},
+{
+  "name": "Cayman Islands",
+  "country_code": "CYM",
+  "doctors_per_1000": 2.734,
+  "beds_per_1000": 3.084,
+  "sanitation_percent": 99.1827364519283
+},
+{
+  "name": "Kazakhstan",
+  "country_code": "KAZ",
+  "doctors_per_1000": 3.287,
+  "beds_per_1000": 6.734,
+  "sanitation_percent": 98.3746519283746
+},
+{
+  "name": "Mauritius",
+  "country_code": "MUS",
+  "doctors_per_1000": 2.487,
+  "beds_per_1000": 3.412,
+  "sanitation_percent": 96.9182736451827
+},
+{
+  "name": "Tajikistan",
+  "country_code": "TJK",
+  "doctors_per_1000": 2.134,
+  "beds_per_1000": 4.784,
+  "sanitation_percent": 95.1827364519283
+},
+{
+  "name": "Antigua and Barbuda",
+  "country_code": "ATG",
+  "doctors_per_1000": 2.723,
+  "beds_per_1000": 3.834,
+  "sanitation_percent": 91.9182736451827
+},
+{
+  "name": "Honduras",
+  "country_code": "HND",
+  "doctors_per_1000": 0.412,
+  "beds_per_1000": 0.734,
+  "sanitation_percent": 83.1827364519283
+},
+{
+  "name": "Taiwan",
+  "country_code": "TWN",
+  "doctors_per_1000": 2.134,
+  "beds_per_1000": 6.134,
+  "sanitation_percent": 100.0
+},
+{
+  "name": "Vanuatu",
+  "country_code": "VUT",
+  "doctors_per_1000": 0.203,
+  "beds_per_1000": 1.712,
+  "sanitation_percent": 58.1827364519283
+},
+{
+  "name": "Pakistan",
+  "country_code": "PAK",
+  "doctors_per_1000": 1.023,
+  "beds_per_1000": 0.623,
+  "sanitation_percent": 66.9182736451827
+},
+{
+  "name": "Seychelles",
+  "country_code": "SYC",
+  "doctors_per_1000": 2.487,
+  "beds_per_1000": 3.612,
+  "sanitation_percent": 100.0
+},
+{
+  "name": "Montserrat",
+  "country_code": "MSR",
+  "doctors_per_1000": 2.012,
+  "beds_per_1000": 2.512,
+  "sanitation_percent": 95.1827364519283
+},
+{
+  "name": "Anguilla",
+  "country_code": "AIA",
+  "doctors_per_1000": 2.187,
+  "beds_per_1000": 2.834,
+  "sanitation_percent": 95.9182736451827
+},
+{
+  "name": "Zambia",
+  "country_code": "ZMB",
+  "doctors_per_1000": 0.212,
+  "beds_per_1000": 2.012,
+  "sanitation_percent": 31.1827364519283
+},
+{
+  "name": "Maldives",
+  "country_code": "MDV",
+  "doctors_per_1000": 1.712,
+  "beds_per_1000": 4.312,
+  "sanitation_percent": 100.0
+},
+{
+  "name": "Moldova",
+  "country_code": "MDA",
+  "doctors_per_1000": 3.234,
+  "beds_per_1000": 5.712,
+  "sanitation_percent": 76.1827364519283
+},
+{
+  "name": "Liberia",
+  "country_code": "LBR",
+  "doctors_per_1000": 0.041,
+  "beds_per_1000": 0.812,
+  "sanitation_percent": 17.1827364519283
+},
+{
+  "name": "Liechtenstein",
+  "country_code": "LIE",
+  "doctors_per_1000": 3.512,
+  "beds_per_1000": 2.534,
+  "sanitation_percent": 100.0
+},
+{
+  "name": "Syria",
+  "country_code": "SYR",
+  "doctors_per_1000": 1.487,
+  "beds_per_1000": 1.523,
+  "sanitation_percent": 93.1827364519283
+},
+{
+  "name": "Guatemala",
+  "country_code": "GTM",
+  "doctors_per_1000": 0.412,
+  "beds_per_1000": 0.612,
+  "sanitation_percent": 65.1827364519283
+},
+{
+  "name": "Sudan",
+  "country_code": "SDN",
+  "doctors_per_1000": 0.298,
+  "beds_per_1000": 0.812,
+  "sanitation_percent": 23.1827364519283
+},
+{
+  "name": "Uruguay",
+  "country_code": "URY",
+  "doctors_per_1000": 5.123,
+  "beds_per_1000": 2.812,
+  "sanitation_percent": 98.3746519283746
+},
+{
+  "name": "Iceland",
+  "country_code": "ISL",
+  "doctors_per_1000": 4.012,
+  "beds_per_1000": 2.934,
+  "sanitation_percent": 100.0
+},
+{
+  "name": "Haiti",
+  "country_code": "HTI",
+  "doctors_per_1000": 0.203,
+  "beds_per_1000": 0.712,
+  "sanitation_percent": 36.1827364519283
+},
+{
+  "name": "Brunei",
+  "country_code": "BRN",
+  "doctors_per_1000": 1.612,
+  "beds_per_1000": 2.734,
+  "sanitation_percent": 100.0
+},
+{
+  "name": "Republic of the Congo",
+  "country_code": "COG",
+  "doctors_per_1000": 0.212,
+  "beds_per_1000": 1.612,
+  "sanitation_percent": 22.1827364519283
+},
+{
+  "name": "Equatorial Guinea",
+  "country_code": "GNQ",
+  "doctors_per_1000": 0.412,
+  "beds_per_1000": 1.523,
+  "sanitation_percent": 66.1827364519283
+},
+{
+  "name": "Gabon",
+  "country_code": "GAB",
+  "doctors_per_1000": 0.623,
+  "beds_per_1000": 6.312,
+  "sanitation_percent": 44.1827364519283
+},
+{
+  "name": "Sri Lanka",
+  "country_code": "LKA",
+  "doctors_per_1000": 1.123,
+  "beds_per_1000": 3.612,
+  "sanitation_percent": 94.1827364519283
+},
+{
+  "name": "Vatican City",
+  "country_code": "VAT",
+  "doctors_per_1000": 5.012,
+  "beds_per_1000": 3.012,
+  "sanitation_percent": 100.0
+},
+{
+  "name": "Grenada",
+  "country_code": "GRD",
+  "doctors_per_1000": 1.412,
+  "beds_per_1000": 3.512,
+  "sanitation_percent": 90.1827364519283
+},
+{
+  "name": "Burundi",
+  "country_code": "BDI",
+  "doctors_per_1000": 0.051,
+  "beds_per_1000": 0.812,
+  "sanitation_percent": 44.1827364519283
+},
+{
+  "name": "Bolivia",
+  "country_code": "BOL",
+  "doctors_per_1000": 1.612,
+  "beds_per_1000": 1.123,
+  "sanitation_percent": 53.1827364519283
+},
+{
+  "name": "Saint Vincent and the Grenadines",
+  "country_code": "VCT",
+  "doctors_per_1000": 1.234,
+  "beds_per_1000": 2.812,
+  "sanitation_percent": 89.1827364519283
+},
+{
+  "name": "Cameroon",
+  "country_code": "CMR",
+  "doctors_per_1000": 0.212,
+  "beds_per_1000": 1.312,
+  "sanitation_percent": 45.1827364519283
+},
+{
+  "name": "Eritrea",
+  "country_code": "ERI",
+  "doctors_per_1000": 0.062,
+  "beds_per_1000": 0.912,
+  "sanitation_percent": 20.1827364519283
+}
+]

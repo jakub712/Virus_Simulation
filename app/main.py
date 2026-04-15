@@ -1,0 +1,120 @@
+from fastapi import FastAPI, Path, Depends, HTTPException
+from app.DB import models
+from app.DB.models import Population_Data, SimResults
+from app.DB.session import engine, SessionLocal
+from typing import Annotated
+from sqlalchemy.orm import Session
+from starlette import status
+from app.data import virus_sim, VIRUSES, get_health_info, calculate_healthcare_score
+from app.data import (
+    get_population_info,
+    get_weather_info,
+)
+
+app = FastAPI()
+
+models.Base.metadata.create_all(bind=engine)
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+db_dependancy = Annotated[Session, Depends(get_db)]
+
+@app.get("/{country}", status_code=status.HTTP_200_OK)
+def get_country_data(country: str, db:db_dependancy):
+    try:
+        temp = get_weather_info(country)['temperature']
+        humidity = get_weather_info(country)['humidity']
+        population = get_population_info(country)['population']
+        density = get_population_info(country)['density']
+        air_quality = get_population_info(country)['air_quality']
+        health = get_health_info(country)
+        doctors = health["doctors_per_1000"]
+        beds = health["beds_per_1000"]
+        sanitation = health["sanitation_percent"]
+        score = calculate_healthcare_score(doctors, beds, sanitation)
+    except Exception:
+        raise HTTPException(status_code=404, detail="Country not found")
+
+    country_model = Population_Data(
+        country = country,
+        temperature = temp,
+        humidity = humidity,
+        population = population,
+        density = density,
+        air_quality = air_quality,
+        healthcare_score = score
+    )
+    db.add(country_model)
+    db.commit()
+
+    return {
+        "country": country,
+        "temperature": temp,
+        "humidity": humidity,
+        "population": population,
+        "density": density,
+        "air_quality": air_quality,
+        "healthcare": score
+    }
+
+
+@app.post("/sim/{country}/{virus}/{days}", status_code= status.HTTP_200_OK)
+def simulate(country:str, db:db_dependancy, days:int = Path(description="recomended is 365"), virus:str = Path(description="Options: Black_Plague, Ebola, COVID, Spanish_Flu, Smallpox, Cholera")):
+    try:
+        temp = get_weather_info(country)['temperature']
+        humidity = get_weather_info(country)['humidity']
+        population = get_population_info(country)['population']
+        density = get_population_info(country)['density']
+        health = get_health_info(country)
+        doctors = health["doctors_per_1000"]
+        beds = health["beds_per_1000"]
+        sanitation = health["sanitation_percent"]
+        score = calculate_healthcare_score(doctors, beds, sanitation)
+        score = max(score, 0.15)
+        density = max(density, 75)
+    except Exception:
+        raise HTTPException(status_code=404, detail="Country not found")
+
+    try:
+        v = VIRUSES.get(virus.lower())
+        sim_results = virus_sim(v, temp, humidity, population, density, score, sanitation, days)
+    except Exception:
+        raise HTTPException(status_code=404, detail="Virus not found")
+
+    simulation_model = SimResults(
+        country = country,
+        virus = virus,
+        healthy = sim_results["healthy"],
+        infected = sim_results["infected"],
+        recovered=sim_results["recovered"],
+        dead = sim_results["dead"]
+    )
+    db.add(simulation_model)
+    db.commit()
+
+    return{
+        "country": country,
+        "virus":virus,
+        "simulation": sim_results,
+    }
+
+@app.get("/sim/read_all",status_code= status.HTTP_200_OK)
+def read_all_sims(db:db_dependancy):
+    return db.query(SimResults).all()
+
+@app.get("/country/read_all", status_code=status.HTTP_200_OK)
+def read_all_population_info(db:db_dependancy):
+    return db.query(Population_Data).all()
+
+@app.get("/compare_sims/{id1}/{id2}", status_code= status.HTTP_200_OK)
+def compare_simulations(db:db_dependancy, id1: int, id2:int):
+    sim_model1 = db.query(SimResults).filter(SimResults.id == id1).first()
+    sim_model2 = db.query(SimResults).filter(SimResults.id == id2).first()
+    if sim_model1 and sim_model2 is not None:
+        return sim_model1, sim_model2
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="simulation not found")
