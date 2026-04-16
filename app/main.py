@@ -4,14 +4,28 @@ from app.DB.models import Population_Data, SimResults
 from app.DB.session import engine, SessionLocal
 from typing import Annotated
 from sqlalchemy.orm import Session
+from fastapi.middleware.cors import CORSMiddleware
 from starlette import status
+from contextlib import asynccontextmanager
 from app.data import virus_sim, VIRUSES, get_health_info, calculate_healthcare_score
 from app.data import (
     get_population_info,
     get_weather_info,
 )
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    models.Base.metadata.create_all(bind=engine)
+    yield
+
+app = FastAPI(lifespan=lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 models.Base.metadata.create_all(bind=engine)
 

@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pathogen Simulator</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #050810;
+    --surface: #0c1120;
+    --surface2: #111827;
+    --border: #1e2d45;
+    --accent: #00e5ff;
+    --accent2: #ff3d5a;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --healthy: #00e5ff;
+    --infected: #ff9500;
+    --recovered: #00d084;
+    --dead: #ff3d5a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; min-height: 100vh; overflow-x: hidden; }
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background: radial-gradient(ellipse 80% 50% at 20% 0%, rgba(0,229,255,0.04) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 40% at 80% 100%, rgba(255,61,90,0.04) 0%, transparent 60%);
+    pointer-events: none; z-index: 0;
+  }
+  .grid-bg {
+    position: fixed; inset: 0;
+    background-image: linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px; pointer-events: none; z-index: 0;
+  }
+  .container { position: relative; z-index: 1; max-width: 1300px; margin: 0 auto; padding: 40px 24px; }
+  header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 28px; padding-bottom: 22px; border-bottom: 1px solid var(--border); }
+  .logo-tag { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--accent); letter-spacing: 3px; text-transform: uppercase; display: block; margin-bottom: 4px; }
+  h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; line-height: 1; letter-spacing: -2px; background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.6) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .status-badge { display: flex; align-items: center; gap: 8px; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 1px; }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.8)} }
+  .api-bar { display: flex; gap: 8px; margin-bottom: 22px; align-items: center; }
+  .api-tag { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 1px; white-space: nowrap; }
+  .api-bar input { max-width: 300px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; color: var(--muted); font-family: 'Space Mono', monospace; font-size: 11px; outline: none; transition: border-color .2s; }
+  .api-bar input:focus { border-color: var(--accent); }
+  .main-grid { display: grid; grid-template-columns: 340px 1fr; gap: 18px; align-items: start; }
+  @media(max-width:960px){.main-grid{grid-template-columns:1fr}}
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .panel-hdr { padding: 13px 17px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+  .pdot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+  .ptitle { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+  .pbody { padding: 16px; }
+  .field { margin-bottom: 13px; }
+  .field label { display: block; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .field input,.field select { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; color: var(--text); font-family: 'Space Mono', monospace; font-size: 12px; outline: none; transition: border-color .2s; appearance: none; }
+  .field input:focus,.field select:focus{border-color:var(--accent)}
+  .field input::placeholder{color:var(--muted)}
+  .vgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+  .voption { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; cursor: pointer; transition: all .2s; text-align: left; }
+  .voption:hover{border-color:var(--accent)}
+  .voption.selected{border-color:var(--accent);background:rgba(0,229,255,.06)}
+  .vname{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;margin-bottom:3px;color:var(--text)}
+  .vmeta{font-family:'Space Mono',monospace;font-size:11px;color:#94a3b8}
+  .ddays{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--accent);text-align:center;margin:5px 0}
+  .dlabel{font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);text-align:center;letter-spacing:2px}
+  input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
+  .btn{padding:11px;border:none;border-radius:8px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s;width:100%;margin-top:5px}
+  .btn-p{background:var(--accent);color:var(--bg)}
+  .btn-p:hover{background:#33ecff;transform:translateY(-1px)}
+  .btn-p:active{transform:translateY(0)}
+  .btn-p:disabled{opacity:.4;cursor:not-allowed;transform:none}
+  .btn-o{background:transparent;border:1px solid var(--accent);color:var(--accent);width:auto;padding:9px 16px;margin-top:0}
+  .btn-o:hover{background:rgba(0,229,255,.08)}
+  .btn-sm{font-size:10px;padding:7px 13px}
+  .tabs{display:flex;border-bottom:1px solid var(--border);overflow-x:auto}
+  .tab{padding:12px 16px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;border-top:none;border-left:none;border-right:none;background:none;transition:all .2s;white-space:nowrap}
+  .tab:hover{color:var(--text)}
+  .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+  .tc{display:none;padding:20px}
+  .tc.active{display:block}
+  .empty{text-align:center;padding:50px 20px;color:var(--muted)}
+  .ei{font-size:40px;margin-bottom:14px;opacity:.3}
+  .et{font-family:'Space Mono',monospace;font-size:11px;line-height:2}
+  .srow{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:18px}
+  @media(max-width:600px){.srow{grid-template-columns:repeat(2,1fr)}}
+  .sc{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:11px;position:relative;overflow:hidden}
+  .sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+  .sc.h::before{background:var(--healthy)}.sc.i::before{background:var(--infected)}.sc.r::before{background:var(--recovered)}.sc.d::before{background:var(--dead)}
+  .slabel{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
+  .sc.h .slabel{color:var(--healthy)}.sc.i .slabel{color:var(--infected)}.sc.r .slabel{color:var(--recovered)}.sc.d .slabel{color:var(--dead)}
+  .sval{font-family:'Space Mono',monospace;font-size:clamp(13px,1.8vw,17px);font-weight:700}
+  .spct{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);margin-top:2px}
+  .crow{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:15px}
+  @media(max-width:640px){.crow{grid-template-columns:1fr}}
+  .cw{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:13px}
+  .ct{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+  .meta{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:16px}
+  .chip{display:flex;align-items:center;gap:5px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:3px 10px;font-family:'Space Mono',monospace;font-size:10px;color:var(--muted)}
+  .chip span{color:var(--text)}
+  .cmpgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:14px}
+  @media(max-width:600px){.cmpgrid{grid-template-columns:1fr}}
+  .cmpinr{display:grid;grid-template-columns:1fr 1fr auto;gap:9px;margin-bottom:13px;align-items:end}
+  .cmpc{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:13px}
+  .cmpct{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:9px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+  .cmpr{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+  .cmpr:last-child{border-bottom:none}
+  .cmpk{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted)}
+  .cmpv{font-family:'Space Mono',monospace;font-size:10px;font-weight:700}
+  .loading{display:none;text-align:center;padding:36px}
+  .loading.active{display:block}
+  .loader{width:34px;height:34px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .ltxt{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px}
+  .err{background:rgba(255,61,90,.08);border:1px solid rgba(255,61,90,.3);border-radius:8px;padding:9px 13px;font-family:'Space Mono',monospace;font-size:11px;color:var(--accent2);margin-bottom:12px;display:none}
+  .err.active{display:block}
+  .ccrd{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px}
+  .cctitle{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--accent);margin-bottom:10px;padding-bottom:9px;border-bottom:1px solid var(--border)}
+  .ccrow{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+  .ccrow:last-child{border-bottom:none}
+  .cck{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted)}
+  .ccv{font-family:'Space Mono',monospace;font-size:10px;font-weight:700}
+  .aqibar{height:4px;border-radius:2px;margin-top:5px;background:var(--border);overflow:hidden}
+  .aqifill{height:100%;border-radius:2px;transition:width .6s ease}
+  .rtbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:9px}
+  .rcount{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted)}
+  .rtbl{width:100%;border-collapse:collapse}
+  .rtbl th{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:7px 9px;text-align:left;border-bottom:1px solid var(--border)}
+  .rtbl td{font-family:'Space Mono',monospace;font-size:11px;padding:8px 9px;border-bottom:1px solid rgba(255,255,255,.04)}
+  .rtbl tr:last-child td{border-bottom:none}
+  .rtbl tr:hover td{background:rgba(255,255,255,.02)}
+  .badge{display:inline-block;padding:2px 8px;border-radius:20px;font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1px}
+  .twrap{overflow-x:auto}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="container">
+  <header>
+    <div>
+      <span class="logo-tag">// epidemiological model v2</span>
+      <h1>PATHOGEN<br>SIMULATOR</h1>
+    </div>
+    <div class="status-badge"><div class="status-dot"></div>LIVE DATA</div>
+  </header>
+
+  <div class="api-bar">
+    <span class="api-tag">API</span>
+    <input type="text" id="apiBase" value="http://localhost:8000">
+  </div>
+
+  <div class="main-grid">
+    <div>
+      <!-- Country Lookup -->
+      <div class="panel" style="margin-bottom:15px">
+        <div class="panel-hdr"><div class="pdot"></div><span class="ptitle">Country Lookup</span></div>
+        <div class="pbody">
+          <div class="field"><label>Country Name</label><input type="text" id="clInput" placeholder="e.g. Germany"></div>
+          <div class="err" id="clErr"></div>
+          <button class="btn btn-p" id="clBtn" onclick="lookupCountry()">⬡ FETCH DATA</button>
+          <div id="clResult" style="margin-top:12px"></div>
+        </div>
+      </div>
+
+      <!-- Simulate -->
+      <div class="panel">
+        <div class="panel-hdr"><div class="pdot"></div><span class="ptitle">Simulation Parameters</span></div>
+        <div class="pbody">
+          <div class="field"><label>Country</label><input type="text" id="simCountry" placeholder="e.g. Poland, Somalia"></div>
+          <div class="field">
+            <label>Virus</label>
+            <div class="vgrid">
+              <button class="voption selected" data-virus="Black_Plague" onclick="selVirus(this)"><div class="vname">Black Plague</div><div class="vmeta">Mortality 70%</div></button>
+              <button class="voption" data-virus="Ebola" onclick="selVirus(this)"><div class="vname">Ebola</div><div class="vmeta">Mortality 50%</div></button>
+              <button class="voption" data-virus="COVID" onclick="selVirus(this)"><div class="vname">COVID-19</div><div class="vmeta">Mortality 2%</div></button>
+              <button class="voption" data-virus="Spanish_Flu" onclick="selVirus(this)"><div class="vname">Spanish Flu</div><div class="vmeta">Mortality 10%</div></button>
+              <button class="voption" data-virus="Smallpox" onclick="selVirus(this)"><div class="vname">Smallpox</div><div class="vmeta">Mortality 30%</div></button>
+              <button class="voption" data-virus="Cholera" onclick="selVirus(this)"><div class="vname">Cholera</div><div class="vmeta">Mortality 25%</div></button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Duration</label>
+            <div class="ddays" id="ddays">365</div>
+            <input type="range" id="dslider" min="30" max="730" value="365" oninput="document.getElementById('ddays').textContent=this.value">
+            <div class="dlabel">DAYS</div>
+          </div>
+          <div class="err" id="simErr"></div>
+          <button class="btn btn-p" id="simBtn" onclick="runSim()">▶ RUN SIMULATION</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right panel -->
+    <div class="panel">
+      <div class="tabs">
+        <button class="tab active" onclick="swTab('results',this)">Results</button>
+        <button class="tab" onclick="swTab('compare',this)">Compare</button>
+        <button class="tab" onclick="swTab('history',this)">Sim History</button>
+        <button class="tab" onclick="swTab('countries',this)">Countries</button>
+      </div>
+
+      <div class="tc active" id="tab-results">
+        <div class="loading" id="simLoad"><div class="loader"></div><div class="ltxt">RUNNING SIMULATION...</div></div>
+        <div id="simResult"><div class="empty"><div class="ei">⬡</div><div class="et">NO SIMULATION ACTIVE<br><br>ENTER A COUNTRY AND VIRUS<br>THEN RUN</div></div></div>
+      </div>
+
+      <div class="tc" id="tab-compare">
+        <div class="cmpinr">
+          <div class="field" style="margin:0"><label>Simulation ID 1</label><input type="number" id="cid1" placeholder="1" min="1"></div>
+          <div class="field" style="margin:0"><label>Simulation ID 2</label><input type="number" id="cid2" placeholder="2" min="1"></div>
+          <button class="btn btn-o btn-sm" onclick="runCmp()">COMPARE</button>
+        </div>
+        <div class="err" id="cmpErr"></div>
+        <div class="loading" id="cmpLoad"><div class="loader"></div><div class="ltxt">FETCHING...</div></div>
+        <div id="cmpResult"><div class="empty"><div class="ei">⬡</div><div class="et">ENTER TWO SIMULATION IDs<br>TO COMPARE</div></div></div>
+      </div>
+
+      <div class="tc" id="tab-history">
+        <div class="rtbar"><span class="rcount" id="simCnt">—</span><button class="btn btn-o btn-sm" onclick="loadHist()">↻ REFRESH</button></div>
+        <div class="loading" id="histLoad"><div class="loader"></div><div class="ltxt">LOADING...</div></div>
+        <div id="histResult"><div class="empty"><div class="ei">⬡</div><div class="et">CLICK REFRESH TO LOAD<br>ALL PAST SIMULATIONS</div></div></div>
+      </div>
+
+      <div class="tc" id="tab-countries">
+        <div class="rtbar"><span class="rcount" id="ctryCnt">—</span><button class="btn btn-o btn-sm" onclick="loadCtries()">↻ REFRESH</button></div>
+        <div class="loading" id="ctryLoad"><div class="loader"></div><div class="ltxt">LOADING...</div></div>
+        <div id="ctryResult"><div class="empty"><div class="ei">⬡</div><div class="et">CLICK REFRESH TO LOAD<br>ALL COUNTRY SNAPSHOTS</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let virus = 'Black_Plague';
+let pieC = null, lineC = null, cmpC = null;
+
+const base = () => document.getElementById('apiBase').value.replace(/\/$/,'');
+const fmt = n => { if(n==null)return'—'; if(n>=1e6)return(n/1e6).toFixed(2)+'M'; if(n>=1000)return(n/1000).toFixed(1)+'K'; return Number(n).toLocaleString(); };
+const pct = (v,t) => t ? ((v/t)*100).toFixed(1)+'%' : '0%';
+const aqiC = a => ['#00d084','#a8cc00','#ffd700','#ff9500','#ff3d5a'][Math.min(a-1,4)]||'#64748b';
+const aqiL = a => ['Good','Fair','Moderate','Poor','Very Poor'][Math.min(a-1,4)]||'Unknown';
+
+function selVirus(el) {
+  document.querySelectorAll('.voption').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected'); virus = el.dataset.virus;
+}
+
+function swTab(name, el) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tc').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+}
+
+function showErr(id, msg) { const e=document.getElementById(id); e.textContent=msg; e.classList.add('active'); }
+function hideErr(id) { document.getElementById(id).classList.remove('active'); }
+
+// Country Lookup
+async function lookupCountry() {
+  const c = document.getElementById('clInput').value.trim();
+  hideErr('clErr');
+  if(!c){showErr('clErr','Enter a country name');return;}
+  const btn = document.getElementById('clBtn');
+  btn.disabled=true; btn.textContent='FETCHING...';
+  document.getElementById('clResult').innerHTML='';
+  try {
+    const r = await fetch(`${base()}/${encodeURIComponent(c)}`);
+    if(!r.ok) throw new Error('Country not found');
+    const d = await r.json();
+    const aqip = (d.air_quality/5)*100;
+    document.getElementById('clResult').innerHTML=`
+      <div class="ccrd">
+        <div class="cctitle">${d.country.toUpperCase()}</div>
+        <div class="ccrow"><span class="cck">Temperature</span><span class="ccv">${d.temperature?.toFixed(1)}°C</span></div>
+        <div class="ccrow"><span class="cck">Humidity</span><span class="ccv">${d.humidity}%</span></div>
+        <div class="ccrow"><span class="cck">Population</span><span class="ccv">${fmt(d.population)}</span></div>
+        <div class="ccrow"><span class="cck">Density</span><span class="ccv">${d.density?.toFixed(1)} /km²</span></div>
+        <div class="ccrow"><span class="cck">Healthcare</span><span class="ccv" style="color:var(--accent)">${(d.healthcare*100).toFixed(0)}%</span></div>
+        <div class="ccrow" style="flex-direction:column;align-items:flex-start;gap:3px">
+          <div style="display:flex;justify-content:space-between;width:100%"><span class="cck">Air Quality</span><span class="ccv" style="color:${aqiC(d.air_quality)}">${aqiL(d.air_quality)}</span></div>
+          <div class="aqibar" style="width:100%"><div class="aqifill" style="width:${aqip}%;background:${aqiC(d.air_quality)}"></div></div>
+        </div>
+      </div>`;
+  } catch(e){showErr('clErr',e.message||'Failed');}
+  finally{btn.disabled=false;btn.textContent='⬡ FETCH DATA';}
+}
+
+// Simulation
+async function runSim() {
+  const country = document.getElementById('simCountry').value.trim();
+  const days = document.getElementById('dslider').value;
+  hideErr('simErr');
+  if(!country){showErr('simErr','Enter a country name');return;}
+  const btn=document.getElementById('simBtn');
+  btn.disabled=true;
+  document.getElementById('simLoad').classList.add('active');
+  document.getElementById('simResult').innerHTML='';
+  try {
+    const r = await fetch(`${base()}/sim/${encodeURIComponent(country)}/${virus}/${days}`,{method:'POST'});
+    if(!r.ok){const d=await r.json();throw new Error(d.detail||'Failed');}
+    renderSim(await r.json());
+  } catch(e){showErr('simErr',e.message||'Error');document.getElementById('simResult').innerHTML='<div class="empty"><div class="et">SIMULATION FAILED</div></div>';}
+  finally{btn.disabled=false;document.getElementById('simLoad').classList.remove('active');}
+}
+
+function renderSim(data) {
+  const s=data.simulation, pop=s.healthy+s.infected+s.recovered+s.dead, h=s.history||[];
+  if(pieC){pieC.destroy();pieC=null;} if(lineC){lineC.destroy();lineC=null;}
+  document.getElementById('simResult').innerHTML=`
+    <div class="meta">
+      <div class="chip">Country <span>${data.country}</span></div>
+      <div class="chip">Virus <span>${data.virus}</span></div>
+      <div class="chip">Days <span>${h.length}</span></div>
+    </div>
+    <div class="srow">
+      <div class="sc h"><div class="slabel">Healthy</div><div class="sval">${fmt(s.healthy)}</div><div class="spct">${pct(s.healthy,pop)}</div></div>
+      <div class="sc i"><div class="slabel">Infected</div><div class="sval">${fmt(s.infected)}</div><div class="spct">${pct(s.infected,pop)}</div></div>
+      <div class="sc r"><div class="slabel">Recovered</div><div class="sval">${fmt(s.recovered)}</div><div class="spct">${pct(s.recovered,pop)}</div></div>
+      <div class="sc d"><div class="slabel">Dead</div><div class="sval">${fmt(s.dead)}</div><div class="spct">${pct(s.dead,pop)}</div></div>
+    </div>
+    <div class="crow">
+      <div class="cw"><div class="ct">Final Outcome</div><canvas id="pieC" height="220"></canvas></div>
+      <div class="cw"><div class="ct">Epidemic Curve</div><canvas id="lineC" height="220"></canvas></div>
+    </div>`;
+
+  pieC = new Chart(document.getElementById('pieC').getContext('2d'),{
+    type:'doughnut',
+    data:{labels:['Healthy','Infected','Recovered','Dead'],datasets:[{data:[s.healthy,s.infected,s.recovered,s.dead],backgroundColor:['#00e5ff22','#ff950022','#00d08422','#ff3d5a22'],borderColor:['#00e5ff','#ff9500','#00d084','#ff3d5a'],borderWidth:2,hoverBackgroundColor:['#00e5ff44','#ff950044','#00d08444','#ff3d5a44']}]},
+    options:{cutout:'65%',plugins:{legend:{position:'bottom',labels:{color:'#64748b',font:{family:'Space Mono',size:10},padding:12,boxWidth:12}},tooltip:{callbacks:{label:c=>` ${fmt(c.raw)} (${pct(c.raw,pop)})`}}}}
+  });
+
+  if(h.length) {
+    const st=Math.max(1,Math.floor(h.length/60));
+    const sp=h.filter((_,i)=>i%st===0||i===h.length-1);
+    lineC = new Chart(document.getElementById('lineC').getContext('2d'),{
+      type:'line',
+      data:{labels:sp.map(d=>`Day ${d.day}`),datasets:[
+        {label:'Infected',data:sp.map(d=>d.infected),borderColor:'#ff9500',backgroundColor:'rgba(255,149,0,.08)',borderWidth:2,pointRadius:0,fill:true,tension:.4},
+        {label:'Dead',data:sp.map(d=>d.dead),borderColor:'#ff3d5a',backgroundColor:'rgba(255,61,90,.06)',borderWidth:2,pointRadius:0,fill:true,tension:.4},
+        {label:'Recovered',data:sp.map(d=>d.recovered),borderColor:'#00d084',backgroundColor:'rgba(0,208,132,.06)',borderWidth:2,pointRadius:0,fill:true,tension:.4}
+      ]},
+      options:{responsive:true,interaction:{intersect:false,mode:'index'},scales:{x:{ticks:{color:'#64748b',font:{family:'Space Mono',size:9},maxTicksLimit:8},grid:{color:'rgba(255,255,255,.04)'}},y:{ticks:{color:'#64748b',font:{family:'Space Mono',size:9},callback:v=>fmt(v)},grid:{color:'rgba(255,255,255,.04)'}}},plugins:{legend:{labels:{color:'#64748b',font:{family:'Space Mono',size:10},boxWidth:12}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.raw)}`}}}}
+    });
+  }
+}
+
+// Compare
+async function runCmp() {
+  const id1=document.getElementById('cid1').value, id2=document.getElementById('cid2').value;
+  hideErr('cmpErr');
+  if(!id1||!id2){showErr('cmpErr','Enter both IDs');return;}
+  document.getElementById('cmpLoad').classList.add('active');
+  document.getElementById('cmpResult').innerHTML='';
+  try {
+    const r=await fetch(`${base()}/compare_sims/${id1}/${id2}`);
+    if(!r.ok){const d=await r.json();throw new Error(d.detail||'Not found');}
+    renderCmp(await r.json(),id1,id2);
+  } catch(e){showErr('cmpErr',e.message||'Error');document.getElementById('cmpResult').innerHTML='<div class="empty"><div class="et">COMPARISON FAILED</div></div>';}
+  finally{document.getElementById('cmpLoad').classList.remove('active');}
+}
+
+function renderCmp(data,id1,id2) {
+  const s1=data[0],s2=data[1];
+  const p1=s1.healthy+s1.infected+s1.recovered+s1.dead;
+  const p2=s2.healthy+s2.infected+s2.recovered+s2.dead;
+  if(cmpC){cmpC.destroy();cmpC=null;}
+  document.getElementById('cmpResult').innerHTML=`
+    <div class="cmpgrid">
+      <div class="cmpc">
+        <div class="cmpct">#${id1} — ${s1.country} / ${s1.virus}</div>
+        <div class="cmpr"><span class="cmpk">Healthy</span><span class="cmpv" style="color:var(--healthy)">${fmt(s1.healthy)} (${pct(s1.healthy,p1)})</span></div>
+        <div class="cmpr"><span class="cmpk">Infected</span><span class="cmpv" style="color:var(--infected)">${fmt(s1.infected)} (${pct(s1.infected,p1)})</span></div>
+        <div class="cmpr"><span class="cmpk">Recovered</span><span class="cmpv" style="color:var(--recovered)">${fmt(s1.recovered)} (${pct(s1.recovered,p1)})</span></div>
+        <div class="cmpr"><span class="cmpk">Dead</span><span class="cmpv" style="color:var(--dead)">${fmt(s1.dead)} (${pct(s1.dead,p1)})</span></div>
+      </div>
+      <div class="cmpc">
+        <div class="cmpct">#${id2} — ${s2.country} / ${s2.virus}</div>
+        <div class="cmpr"><span class="cmpk">Healthy</span><span class="cmpv" style="color:var(--healthy)">${fmt(s2.healthy)} (${pct(s2.healthy,p2)})</span></div>
+        <div class="cmpr"><span class="cmpk">Infected</span><span class="cmpv" style="color:var(--infected)">${fmt(s2.infected)} (${pct(s2.infected,p2)})</span></div>
+        <div class="cmpr"><span class="cmpk">Recovered</span><span class="cmpv" style="color:var(--recovered)">${fmt(s2.recovered)} (${pct(s2.recovered,p2)})</span></div>
+        <div class="cmpr"><span class="cmpk">Dead</span><span class="cmpv" style="color:var(--dead)">${fmt(s2.dead)} (${pct(s2.dead,p2)})</span></div>
+      </div>
+    </div>
+    <div class="cw"><div class="ct">Side-by-Side Comparison</div><canvas id="cmpC" height="200"></canvas></div>`;
+
+  cmpC = new Chart(document.getElementById('cmpC').getContext('2d'),{
+    type:'bar',
+    data:{labels:['Healthy','Infected','Recovered','Dead'],datasets:[
+      {label:`#${id1} ${s1.country}`,data:[s1.healthy,s1.infected,s1.recovered,s1.dead],backgroundColor:['#00e5ff33','#ff950033','#00d08433','#ff3d5a33'],borderColor:['#00e5ff','#ff9500','#00d084','#ff3d5a'],borderWidth:2,borderRadius:4},
+      {label:`#${id2} ${s2.country}`,data:[s2.healthy,s2.infected,s2.recovered,s2.dead],backgroundColor:['#00e5ff1a','#ff95001a','#00d0841a','#ff3d5a1a'],borderColor:['#00e5ff88','#ff950088','#00d08488','#ff3d5a88'],borderWidth:2,borderRadius:4}
+    ]},
+    options:{responsive:true,scales:{x:{ticks:{color:'#64748b',font:{family:'Space Mono',size:10}},grid:{color:'rgba(255,255,255,.04)'}},y:{ticks:{color:'#64748b',font:{family:'Space Mono',size:9},callback:v=>fmt(v)},grid:{color:'rgba(255,255,255,.04)'}}},plugins:{legend:{labels:{color:'#64748b',font:{family:'Space Mono',size:10},boxWidth:12}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.raw)}`}}}}
+  });
+}
+
+// Sim History
+async function loadHist() {
+  document.getElementById('histLoad').classList.add('active');
+  document.getElementById('histResult').innerHTML='';
+  try {
+    const r=await fetch(`${base()}/sim/read_all`);
+    if(!r.ok) throw new Error();
+    const data=await r.json();
+    document.getElementById('simCnt').textContent=`${data.length} record${data.length!==1?'s':''}`;
+    if(!data.length){document.getElementById('histResult').innerHTML='<div class="empty"><div class="et">NO SIMULATIONS YET</div></div>';return;}
+    document.getElementById('histResult').innerHTML=`<div class="twrap"><table class="rtbl"><thead><tr><th>ID</th><th>Country</th><th>Virus</th><th>Dead</th><th>Recovered</th><th>Mortality</th></tr></thead><tbody>${
+      data.map(s=>{const pop=s.healthy+s.infected+s.recovered+s.dead;return`<tr><td style="color:var(--muted)">#${s.id}</td><td>${s.country}</td><td><span class="badge" style="background:rgba(0,229,255,.1);color:var(--accent)">${s.virus}</span></td><td style="color:var(--dead)">${fmt(s.dead)}</td><td style="color:var(--recovered)">${fmt(s.recovered)}</td><td style="color:var(--muted)">${pct(s.dead,pop)}</td></tr>`;}).join('')
+    }</tbody></table></div>`;
+  } catch{document.getElementById('histResult').innerHTML='<div class="empty"><div class="et">FAILED TO LOAD</div></div>';}
+  finally{document.getElementById('histLoad').classList.remove('active');}
+}
+
+// Countries
+async function loadCtries() {
+  document.getElementById('ctryLoad').classList.add('active');
+  document.getElementById('ctryResult').innerHTML='';
+  try {
+    const r=await fetch(`${base()}/country/read_all`);
+    if(!r.ok) throw new Error();
+    const data=await r.json();
+    document.getElementById('ctryCnt').textContent=`${data.length} snapshot${data.length!==1?'s':''}`;
+    if(!data.length){document.getElementById('ctryResult').innerHTML='<div class="empty"><div class="et">NO DATA YET</div></div>';return;}
+    document.getElementById('ctryResult').innerHTML=`<div class="twrap"><table class="rtbl"><thead><tr><th>ID</th><th>Country</th><th>Temp</th><th>Humidity</th><th>Population</th><th>Density</th><th>Healthcare</th><th>Air</th></tr></thead><tbody>${
+      data.map(c=>`<tr><td style="color:var(--muted)">#${c.id}</td><td>${c.country}</td><td>${c.temperature?.toFixed(1)}°C</td><td>${c.humidity}%</td><td>${fmt(c.population)}</td><td>${c.density?.toFixed(0)}/km²</td><td style="color:var(--accent)">${(c.healthcare_score*100).toFixed(0)}%</td><td style="color:${aqiC(c.air_quality)}">${aqiL(c.air_quality)}</td></tr>`).join('')
+    }</tbody></table></div>`;
+  } catch{document.getElementById('ctryResult').innerHTML='<div class="empty"><div class="et">FAILED TO LOAD</div></div>';}
+  finally{document.getElementById('ctryLoad').classList.remove('active');}
+}
+</script>
+</body>
+</html>
