@@ -7,6 +7,8 @@ from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
 from starlette import status
 from contextlib import asynccontextmanager
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from app.data import virus_sim, VIRUSES, get_health_info, calculate_healthcare_score
 from app.data import (
     get_population_info,
@@ -19,6 +21,10 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(lifespan=lifespan)
+
+@app.get("/")
+def frontend():
+    return FileResponse("app/index.html")
 
 app.add_middleware(
     CORSMiddleware,
