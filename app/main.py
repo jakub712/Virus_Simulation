@@ -115,6 +115,6 @@ def read_all_population_info(db:db_dependancy):
 def compare_simulations(db:db_dependancy, id1: int, id2:int):
     sim_model1 = db.query(SimResults).filter(SimResults.id == id1).first()
     sim_model2 = db.query(SimResults).filter(SimResults.id == id2).first()
-    if sim_model1 and sim_model2 is not None:
+    if sim_model1 is not None and sim_model2 is not None:
         return sim_model1, sim_model2
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="simulation not found")
