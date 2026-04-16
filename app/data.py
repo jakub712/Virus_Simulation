@@ -80,7 +80,7 @@ def virus_sim(v, temp, humidity, population, density, score, sanitation, days):
     temp_factor = max(0.5, 1.0 - (temp_diff / 40))
     density_factor = max(min(density / 500, 1.0), 0.15)
     humidity_factor = humidity / 100
-    sanitation_factor = sanitation / 100
+    sanitation_factor = max(0.1, 1 - (sanitation / 100))
 
     effective_infection_rate = v.infection_rate * (0.5 + density_factor * 0.5)
 
