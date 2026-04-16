@@ -24,7 +24,7 @@ app = FastAPI(lifespan=lifespan)
 
 @app.get("/")
 def frontend():
-    return FileResponse("app/index.html")
+    return FileResponse("index.html")
 
 app.add_middleware(
     CORSMiddleware,
