@@ -70,8 +70,8 @@ VIRUSES = {
 
 def virus_sim(v, temp, humidity, population, density, score, sanitation, days):
     days = int(days)
-    healthy = float(population - 1000)
-    infected = 1000
+    infected = max(50, population * 0.000003)
+    healthy = float(population - infected)
     recovered = 0.0
     dead = 0.0
     history = []
