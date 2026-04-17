@@ -47,7 +47,7 @@ db_dependancy = Annotated[Session, Depends(get_db)]
 @app.post("/sim/{country}/{virus}/{days}", status_code= status.HTTP_200_OK)
 def run_simulation(db:db_dependancy, country:str, days:int = Path(description="recomended is 365"), virus:str = Path(description="Options: Black_Plague, Ebola, COVID, Spanish_Flu, Smallpox, Cholera")):
     try:
-        temp = get_weather_info(country)['temprature']
+        temp = get_weather_info(country)['temperature']
         humidity = get_weather_info(country)['humidity']
         population = get_population_info(country)['population']
         density = get_population_info(country)['density']
