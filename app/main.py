@@ -44,45 +44,6 @@ def get_db():
 
 db_dependancy = Annotated[Session, Depends(get_db)]
 
-@app.get("/{country}", status_code=status.HTTP_200_OK)
-def get_country_data(country: str, db:db_dependancy):
-    try:
-        temp = get_weather_info(country)['temperature']
-        humidity = get_weather_info(country)['humidity']
-        population = get_population_info(country)['population']
-        density = get_population_info(country)['density']
-        air_quality = get_population_info(country)['air_quality']
-        health = get_health_info(country)
-        doctors = health["doctors_per_1000"]
-        beds = health["beds_per_1000"]
-        sanitation = health["sanitation_percent"]
-        score = calculate_healthcare_score(doctors, beds, sanitation)
-    except Exception:
-        raise HTTPException(status_code=404, detail="Country not found")
-
-    country_model = Population_Data(
-        country = country,
-        temperature = temp,
-        humidity = humidity,
-        population = population,
-        density = density,
-        air_quality = air_quality,
-        healthcare_score = score
-    )
-    db.add(country_model)
-    db.commit()
-
-    return {
-        "country": country,
-        "temperature": temp,
-        "humidity": humidity,
-        "population": population,
-        "density": density,
-        "air_quality": air_quality,
-        "healthcare": score
-    }
-
-
 @app.get("/sim/read_all",status_code= status.HTTP_200_OK)
 def read_all_sims(db:db_dependancy):
     return db.query(SimResults).all()
@@ -152,6 +113,43 @@ def compare_simulations(db:db_dependancy, country1:str, country2:str, days:int =
         "country2": country2,
         "virus":virus,
         "simulation1": sim_results1,
-        "simulation2": sim_results2
-        
+        "simulation2": sim_results2    
+    }
+
+@app.get("/{country}", status_code=status.HTTP_200_OK)
+def get_country_data(country: str, db:db_dependancy):
+    try:
+        temp = get_weather_info(country)['temperature']
+        humidity = get_weather_info(country)['humidity']
+        population = get_population_info(country)['population']
+        density = get_population_info(country)['density']
+        air_quality = get_population_info(country)['air_quality']
+        health = get_health_info(country)
+        doctors = health["doctors_per_1000"]
+        beds = health["beds_per_1000"]
+        sanitation = health["sanitation_percent"]
+        score = calculate_healthcare_score(doctors, beds, sanitation)
+    except Exception:
+        raise HTTPException(status_code=404, detail="Country not found")
+
+    country_model = Population_Data(
+        country = country,
+        temperature = temp,
+        humidity = humidity,
+        population = population,
+        density = density,
+        air_quality = air_quality,
+        healthcare_score = score
+    )
+    db.add(country_model)
+    db.commit()
+
+    return {
+        "country": country,
+        "temperature": temp,
+        "humidity": humidity,
+        "population": population,
+        "density": density,
+        "air_quality": air_quality,
+        "healthcare": score
     }
