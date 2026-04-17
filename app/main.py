@@ -82,7 +82,7 @@ def run_simulation(db:db_dependancy, country:str, days:int = Path(description="r
     return{
         "country": country,
         "virus":virus,
-        "simulation1": sim_results,
+        "simulation": sim_results,
     }
 
 @app.get("/sim/read_all",status_code= status.HTTP_200_OK)
