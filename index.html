@@ -101,7 +101,8 @@
   .chip span{color:var(--text)}
   .cmpgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:14px}
   @media(max-width:600px){.cmpgrid{grid-template-columns:1fr}}
-  .cmpinr{display:grid;grid-template-columns:1fr 1fr auto;gap:9px;margin-bottom:13px;align-items:end}
+  .cmp-inputs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:13px}
+  @media(max-width:600px){.cmp-inputs{grid-template-columns:1fr}}
   .cmpc{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:13px}
   .cmpct{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:9px;padding-bottom:8px;border-bottom:1px solid var(--border)}
   .cmpr{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04)}
@@ -132,6 +133,8 @@
   .rtbl tr:hover td{background:rgba(255,255,255,.02)}
   .badge{display:inline-block;padding:2px 8px;border-radius:20px;font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1px}
   .twrap{overflow-x:auto}
+  .cmp-vgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:13px}
+  .cmp-days{font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--accent);text-align:center;margin:4px 0}
 </style>
 </head>
 <body>
@@ -171,12 +174,12 @@
           <div class="field">
             <label>Virus</label>
             <div class="vgrid">
-              <button class="voption selected" data-virus="Black_Plague" onclick="selVirus(this)"><div class="vname">Black Plague</div><div class="vmeta">Mortality 70%</div></button>
-              <button class="voption" data-virus="Ebola" onclick="selVirus(this)"><div class="vname">Ebola</div><div class="vmeta">Mortality 50%</div></button>
-              <button class="voption" data-virus="COVID" onclick="selVirus(this)"><div class="vname">COVID-19</div><div class="vmeta">Mortality 2%</div></button>
-              <button class="voption" data-virus="Spanish_Flu" onclick="selVirus(this)"><div class="vname">Spanish Flu</div><div class="vmeta">Mortality 10%</div></button>
-              <button class="voption" data-virus="Smallpox" onclick="selVirus(this)"><div class="vname">Smallpox</div><div class="vmeta">Mortality 30%</div></button>
-              <button class="voption" data-virus="Cholera" onclick="selVirus(this)"><div class="vname">Cholera</div><div class="vmeta">Mortality 25%</div></button>
+              <button class="voption selected" data-virus="Black_Plague" onclick="selVirus(this,'sim')"><div class="vname">Black Plague</div><div class="vmeta">Mortality 70%</div></button>
+              <button class="voption" data-virus="Ebola" onclick="selVirus(this,'sim')"><div class="vname">Ebola</div><div class="vmeta">Mortality 50%</div></button>
+              <button class="voption" data-virus="COVID" onclick="selVirus(this,'sim')"><div class="vname">COVID-19</div><div class="vmeta">Mortality 2%</div></button>
+              <button class="voption" data-virus="Spanish_Flu" onclick="selVirus(this,'sim')"><div class="vname">Spanish Flu</div><div class="vmeta">Mortality 10%</div></button>
+              <button class="voption" data-virus="Smallpox" onclick="selVirus(this,'sim')"><div class="vname">Smallpox</div><div class="vmeta">Mortality 30%</div></button>
+              <button class="voption" data-virus="Cholera" onclick="selVirus(this,'sim')"><div class="vname">Cholera</div><div class="vmeta">Mortality 25%</div></button>
             </div>
           </div>
           <div class="field">
@@ -205,15 +208,33 @@
         <div id="simResult"><div class="empty"><div class="ei">⬡</div><div class="et">NO SIMULATION ACTIVE<br><br>ENTER A COUNTRY AND VIRUS<br>THEN RUN</div></div></div>
       </div>
 
+      <!-- Compare tab — updated for new endpoint -->
       <div class="tc" id="tab-compare">
-        <div class="cmpinr">
-          <div class="field" style="margin:0"><label>Simulation ID 1</label><input type="number" id="cid1" placeholder="1" min="1"></div>
-          <div class="field" style="margin:0"><label>Simulation ID 2</label><input type="number" id="cid2" placeholder="2" min="1"></div>
-          <button class="btn btn-o btn-sm" onclick="runCmp()">COMPARE</button>
+        <div class="cmp-inputs">
+          <div class="field" style="margin:0"><label>Country 1</label><input type="text" id="cmpCountry1" placeholder="e.g. Poland"></div>
+          <div class="field" style="margin:0"><label>Country 2</label><input type="text" id="cmpCountry2" placeholder="e.g. Somalia"></div>
+        </div>
+        <div class="field" style="margin-bottom:10px">
+          <label>Virus</label>
+          <div class="cmp-vgrid">
+            <button class="voption selected" data-virus="Black_Plague" onclick="selVirus(this,'cmp')"><div class="vname">Black Plague</div><div class="vmeta">Mortality 70%</div></button>
+            <button class="voption" data-virus="Ebola" onclick="selVirus(this,'cmp')"><div class="vname">Ebola</div><div class="vmeta">Mortality 50%</div></button>
+            <button class="voption" data-virus="COVID" onclick="selVirus(this,'cmp')"><div class="vname">COVID-19</div><div class="vmeta">Mortality 2%</div></button>
+            <button class="voption" data-virus="Spanish_Flu" onclick="selVirus(this,'cmp')"><div class="vname">Spanish Flu</div><div class="vmeta">Mortality 10%</div></button>
+            <button class="voption" data-virus="Smallpox" onclick="selVirus(this,'cmp')"><div class="vname">Smallpox</div><div class="vmeta">Mortality 30%</div></button>
+            <button class="voption" data-virus="Cholera" onclick="selVirus(this,'cmp')"><div class="vname">Cholera</div><div class="vmeta">Mortality 25%</div></button>
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:13px">
+          <label>Duration</label>
+          <div class="cmp-days" id="cmpDays">365</div>
+          <input type="range" id="cmpSlider" min="30" max="730" value="365" oninput="document.getElementById('cmpDays').textContent=this.value">
+          <div class="dlabel">DAYS</div>
         </div>
         <div class="err" id="cmpErr"></div>
-        <div class="loading" id="cmpLoad"><div class="loader"></div><div class="ltxt">FETCHING...</div></div>
-        <div id="cmpResult"><div class="empty"><div class="ei">⬡</div><div class="et">ENTER TWO SIMULATION IDs<br>TO COMPARE</div></div></div>
+        <button class="btn btn-p" id="cmpBtn" onclick="runCmp()" style="margin-bottom:16px">⬡ COMPARE COUNTRIES</button>
+        <div class="loading" id="cmpLoad"><div class="loader"></div><div class="ltxt">RUNNING SIMULATIONS...</div></div>
+        <div id="cmpResult"><div class="empty"><div class="ei">⬡</div><div class="et">ENTER TWO COUNTRIES AND A VIRUS<br>TO COMPARE OUTBREAKS</div></div></div>
       </div>
 
       <div class="tc" id="tab-history">
@@ -233,6 +254,7 @@
 
 <script>
 let virus = 'Black_Plague';
+let cmpVirus = 'Black_Plague';
 let pieC = null, lineC = null, cmpC = null;
 
 const base = () => document.getElementById('apiBase').value.replace(/\/$/,'');
@@ -241,9 +263,12 @@ const pct = (v,t) => t ? ((v/t)*100).toFixed(1)+'%' : '0%';
 const aqiC = a => ['#00d084','#a8cc00','#ffd700','#ff9500','#ff3d5a'][Math.min(a-1,4)]||'#64748b';
 const aqiL = a => ['Good','Fair','Moderate','Poor','Very Poor'][Math.min(a-1,4)]||'Unknown';
 
-function selVirus(el) {
-  document.querySelectorAll('.voption').forEach(b=>b.classList.remove('selected'));
-  el.classList.add('selected'); virus = el.dataset.virus;
+function selVirus(el, panel) {
+  const group = panel === 'cmp' ? '.cmp-vgrid .voption' : '.vgrid .voption';
+  document.querySelectorAll(group).forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  if (panel === 'cmp') cmpVirus = el.dataset.virus;
+  else virus = el.dataset.virus;
 }
 
 function swTab(name, el) {
@@ -345,37 +370,44 @@ function renderSim(data) {
   }
 }
 
-// Compare
+// Compare — updated for new endpoint
 async function runCmp() {
-  const id1=document.getElementById('cid1').value, id2=document.getElementById('cid2').value;
+  const country1 = document.getElementById('cmpCountry1').value.trim();
+  const country2 = document.getElementById('cmpCountry2').value.trim();
+  const days = document.getElementById('cmpSlider').value;
   hideErr('cmpErr');
-  if(!id1||!id2){showErr('cmpErr','Enter both IDs');return;}
+  if(!country1||!country2){showErr('cmpErr','Enter both country names');return;}
+  const btn = document.getElementById('cmpBtn');
+  btn.disabled=true;
   document.getElementById('cmpLoad').classList.add('active');
   document.getElementById('cmpResult').innerHTML='';
   try {
-    const r=await fetch(`${base()}/compare_sims/${id1}/${id2}`);
+    const r = await fetch(`${base()}/compare_sims/${encodeURIComponent(country1)}/${encodeURIComponent(country2)}/${cmpVirus}/${days}`);
     if(!r.ok){const d=await r.json();throw new Error(d.detail||'Not found');}
-    renderCmp(await r.json(),id1,id2);
+    renderCmp(await r.json(), country1, country2);
   } catch(e){showErr('cmpErr',e.message||'Error');document.getElementById('cmpResult').innerHTML='<div class="empty"><div class="et">COMPARISON FAILED</div></div>';}
-  finally{document.getElementById('cmpLoad').classList.remove('active');}
+  finally{btn.disabled=false;document.getElementById('cmpLoad').classList.remove('active');}
 }
 
-function renderCmp(data,id1,id2) {
-  const s1=data[0],s2=data[1];
+function renderCmp(data, country1, country2) {
+  const s1=data.simulation1, s2=data.simulation2;
   const p1=s1.healthy+s1.infected+s1.recovered+s1.dead;
   const p2=s2.healthy+s2.infected+s2.recovered+s2.dead;
   if(cmpC){cmpC.destroy();cmpC=null;}
   document.getElementById('cmpResult').innerHTML=`
+    <div class="meta" style="margin-bottom:14px">
+      <div class="chip">Virus <span>${data.virus}</span></div>
+    </div>
     <div class="cmpgrid">
       <div class="cmpc">
-        <div class="cmpct">#${id1} — ${s1.country} / ${s1.virus}</div>
+        <div class="cmpct">${s1.country || country1}</div>
         <div class="cmpr"><span class="cmpk">Healthy</span><span class="cmpv" style="color:var(--healthy)">${fmt(s1.healthy)} (${pct(s1.healthy,p1)})</span></div>
         <div class="cmpr"><span class="cmpk">Infected</span><span class="cmpv" style="color:var(--infected)">${fmt(s1.infected)} (${pct(s1.infected,p1)})</span></div>
         <div class="cmpr"><span class="cmpk">Recovered</span><span class="cmpv" style="color:var(--recovered)">${fmt(s1.recovered)} (${pct(s1.recovered,p1)})</span></div>
         <div class="cmpr"><span class="cmpk">Dead</span><span class="cmpv" style="color:var(--dead)">${fmt(s1.dead)} (${pct(s1.dead,p1)})</span></div>
       </div>
       <div class="cmpc">
-        <div class="cmpct">#${id2} — ${s2.country} / ${s2.virus}</div>
+        <div class="cmpct">${s2.country || country2}</div>
         <div class="cmpr"><span class="cmpk">Healthy</span><span class="cmpv" style="color:var(--healthy)">${fmt(s2.healthy)} (${pct(s2.healthy,p2)})</span></div>
         <div class="cmpr"><span class="cmpk">Infected</span><span class="cmpv" style="color:var(--infected)">${fmt(s2.infected)} (${pct(s2.infected,p2)})</span></div>
         <div class="cmpr"><span class="cmpk">Recovered</span><span class="cmpv" style="color:var(--recovered)">${fmt(s2.recovered)} (${pct(s2.recovered,p2)})</span></div>
@@ -387,8 +419,8 @@ function renderCmp(data,id1,id2) {
   cmpC = new Chart(document.getElementById('cmpC').getContext('2d'),{
     type:'bar',
     data:{labels:['Healthy','Infected','Recovered','Dead'],datasets:[
-      {label:`#${id1} ${s1.country}`,data:[s1.healthy,s1.infected,s1.recovered,s1.dead],backgroundColor:['#00e5ff33','#ff950033','#00d08433','#ff3d5a33'],borderColor:['#00e5ff','#ff9500','#00d084','#ff3d5a'],borderWidth:2,borderRadius:4},
-      {label:`#${id2} ${s2.country}`,data:[s2.healthy,s2.infected,s2.recovered,s2.dead],backgroundColor:['#00e5ff1a','#ff95001a','#00d0841a','#ff3d5a1a'],borderColor:['#00e5ff88','#ff950088','#00d08488','#ff3d5a88'],borderWidth:2,borderRadius:4}
+      {label:country1,data:[s1.healthy,s1.infected,s1.recovered,s1.dead],backgroundColor:['#00e5ff33','#ff950033','#00d08433','#ff3d5a33'],borderColor:['#00e5ff','#ff9500','#00d084','#ff3d5a'],borderWidth:2,borderRadius:4},
+      {label:country2,data:[s2.healthy,s2.infected,s2.recovered,s2.dead],backgroundColor:['#00e5ff1a','#ff95001a','#00d0841a','#ff3d5a1a'],borderColor:['#00e5ff88','#ff950088','#00d08488','#ff3d5a88'],borderWidth:2,borderRadius:4}
     ]},
     options:{responsive:true,scales:{x:{ticks:{color:'#64748b',font:{family:'Space Mono',size:10}},grid:{color:'rgba(255,255,255,.04)'}},y:{ticks:{color:'#64748b',font:{family:'Space Mono',size:9},callback:v=>fmt(v)},grid:{color:'rgba(255,255,255,.04)'}}},plugins:{legend:{labels:{color:'#64748b',font:{family:'Space Mono',size:10},boxWidth:12}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.raw)}`}}}}
   });

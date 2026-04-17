@@ -83,46 +83,6 @@ def get_country_data(country: str, db:db_dependancy):
     }
 
 
-@app.post("/sim/{country}/{virus}/{days}", status_code= status.HTTP_200_OK)
-def simulate(country:str, db:db_dependancy, days:int = Path(description="recomended is 365"), virus:str = Path(description="Options: Black_Plague, Ebola, COVID, Spanish_Flu, Smallpox, Cholera")):
-    try:
-        temp = get_weather_info(country)['temperature']
-        humidity = get_weather_info(country)['humidity']
-        population = get_population_info(country)['population']
-        density = get_population_info(country)['density']
-        health = get_health_info(country)
-        doctors = health["doctors_per_1000"]
-        beds = health["beds_per_1000"]
-        sanitation = health["sanitation_percent"]
-        score = calculate_healthcare_score(doctors, beds, sanitation)
-        score = max(score, 0.15)
-        density = max(density, 75)
-    except Exception:
-        raise HTTPException(status_code=404, detail="Country not found")
-
-    try:
-        v = VIRUSES.get(virus.lower())
-        sim_results = virus_sim(v, temp, humidity, population, density, score, sanitation, days)
-    except Exception:
-        raise HTTPException(status_code=404, detail="Virus not found")
-
-    simulation_model = SimResults(
-        country = country,
-        virus = virus,
-        healthy = sim_results["healthy"],
-        infected = sim_results["infected"],
-        recovered=sim_results["recovered"],
-        dead = sim_results["dead"]
-    )
-    db.add(simulation_model)
-    db.commit()
-
-    return{
-        "country": country,
-        "virus":virus,
-        "simulation": sim_results,
-    }
-
 @app.get("/sim/read_all",status_code= status.HTTP_200_OK)
 def read_all_sims(db:db_dependancy):
     return db.query(SimResults).all()
@@ -131,10 +91,67 @@ def read_all_sims(db:db_dependancy):
 def read_all_population_info(db:db_dependancy):
     return db.query(Population_Data).all()
 
-@app.get("/compare_sims/{id1}/{id2}", status_code= status.HTTP_200_OK)
-def compare_simulations(db:db_dependancy, id1: int, id2:int):
-    sim_model1 = db.query(SimResults).filter(SimResults.id == id1).first()
-    sim_model2 = db.query(SimResults).filter(SimResults.id == id2).first()
-    if sim_model1 is not None and sim_model2 is not None:
-        return sim_model1, sim_model2
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="simulation not found")
+@app.get("/compare_sims/{country1}/{country2}/{virus}/{days}", status_code= status.HTTP_200_OK)
+def compare_simulations(db:db_dependancy, country1:str, country2:str, days:int = Path(description="recomended is 365"), virus:str = Path(description="Options: Black_Plague, Ebola, COVID, Spanish_Flu, Smallpox, Cholera")):
+    try:
+        temp1 = get_weather_info(country1)['temperature']
+        temp2 = get_weather_info(country2)['temperature']
+        humidity1 = get_weather_info(country1)['humidity']
+        humidity2 = get_weather_info(country2)['humidity']
+        population1 = get_population_info(country1)['population']
+        population2 = get_population_info(country2)['population']
+        density1 = get_population_info(country1)['density']
+        density2 = get_population_info(country2)['density']
+        health1 = get_health_info(country1)
+        health2 = get_health_info(country2)
+        doctors1 = health1["doctors_per_1000"]
+        beds1 = health1["beds_per_1000"]
+        sanitation1  = health1["sanitation_percent"]
+        score1 = calculate_healthcare_score(doctors1, beds1, sanitation1)
+        doctors2 = health2["doctors_per_1000"]
+        beds2 = health2["beds_per_1000"]
+        sanitation2  = health2["sanitation_percent"]
+        score2 = calculate_healthcare_score(doctors2, beds2, sanitation2)
+        score1 = max(score1, 0.15)
+        score2 = max(score2, 0.15)
+        density1 = max(density1, 75)
+        density2 = max(density2, 75)
+
+    except Exception:
+        raise HTTPException(status_code=404, detail="Country not found")
+
+    try:
+        v = VIRUSES.get(virus.lower())
+        sim_results1 = virus_sim(v, temp1, humidity1, population1, density1, score1, sanitation1, days)
+        sim_results2 = virus_sim(v, temp2, humidity2, population2, density2, score2, sanitation2, days)
+    except Exception:
+        raise HTTPException(status_code=404, detail="Virus not found")
+    
+    simulation_model1 = SimResults(
+        country = country1,
+        virus = virus,
+        healthy = sim_results1["healthy"],
+        infected = sim_results1["infected"],
+        recovered=sim_results1["recovered"],
+        dead = sim_results1["dead"]
+    )
+    simulation_model2 = SimResults(
+        country = country2,
+        virus = virus,
+        healthy = sim_results2["healthy"],
+        infected = sim_results2["infected"],
+        recovered=sim_results2["recovered"],
+        dead = sim_results2["dead"]
+    )
+    db.add(simulation_model1)
+    db.add(simulation_model2)
+    db.commit()
+
+    return{
+        "country1": country1,
+        "country2": country2,
+        "virus":virus,
+        "simulation1": sim_results1,
+        "simulation2": sim_results2
+        
+    }
