@@ -44,6 +44,55 @@ def get_db():
 
 db_dependancy = Annotated[Session, Depends(get_db)]
 
+@app.post("/sim/{country}/{virus}/{days}", status_code= status.HTTP_200_OK)
+def run_simulation(db:db_dependancy, country:str, virus:str, days:int = Path(description="recomended is 365"), virus:str = Path(description="Options: Black_Plague, Ebola, COVID, Spanish_Flu, Smallpox, Cholera")):
+    try:
+        temp = get_weather_info(country)['temprature']
+        humidity = get_weather_info(country)['humidity']
+        population = get_population_info(country)['population']
+        density = get_population_info(country)['density']
+        health = get_health_info(country)
+        doctors = health["doctors_per_1000"]
+        beds = health["beds_per_1000"]
+        sanitation  = health["sanitation_percent"]
+        score = calculate_healthcare_score(doctors, beds, sanitation)
+        score = max(score, 0.15)
+        density = max(density, 75)
+    
+    except Exception:
+        raise HTTPException(status_code=404, detail="Country not found")
+    
+    try:
+        v = VIRUSES.get(virus.lower())
+        sim_results = virus_sim(v, temp, humidity, population, density, score, sanitation, days)
+    except Exception:
+        raise HTTPException(status_code=404, detail="Virus not found")
+    
+    simulation_model = SimResults(
+        country = country,
+        virus = virus,
+        healthy = sim_results["healthy"],
+        infected = sim_results["infected"],
+        recovered=sim_results["recovered"],
+        dead = sim_results["dead"]
+    )
+    db.add(simulation_model)
+    db.commit()
+
+    return{
+        "country": country,
+        "virus":virus,
+        "simulation1": sim_results,
+    }
+
+@app.get("/sim/read_all",status_code= status.HTTP_200_OK)
+def read_all_sims(db:db_dependancy):
+    return db.query(SimResults).all()
+
+@app.get("/country/read_all", status_code=status.HTTP_200_OK)
+def read_all_population_info(db:db_dependancy):
+    return db.query(Population_Data).all()
+
 @app.get("/compare_sims/{country1}/{country2}/{virus}/{days}", status_code= status.HTTP_200_OK)
 def compare_simulations(db:db_dependancy, country1:str, country2:str, days:int = Path(description="recomended is 365"), virus:str = Path(description="Options: Black_Plague, Ebola, COVID, Spanish_Flu, Smallpox, Cholera")):
     try:
@@ -107,15 +156,6 @@ def compare_simulations(db:db_dependancy, country1:str, country2:str, days:int =
         "simulation1": sim_results1,
         "simulation2": sim_results2    
     }
-
-@app.get("/sim/read_all",status_code= status.HTTP_200_OK)
-def read_all_sims(db:db_dependancy):
-    return db.query(SimResults).all()
-
-@app.get("/country/read_all", status_code=status.HTTP_200_OK)
-def read_all_population_info(db:db_dependancy):
-    return db.query(Population_Data).all()
-
 
 @app.get("/{country}", status_code=status.HTTP_200_OK)
 def get_country_data(country: str, db:db_dependancy):
