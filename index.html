@@ -130,7 +130,7 @@
   }
   .country-card.visible { display: block; }
   .country-card-name { font-weight: 500; font-size: 14px; color: #fff; margin-bottom: 10px; }
-  .country-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .country-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 
   .cstat-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
   .cstat-value { font-family: var(--mono); font-size: 13px; color: var(--cyan); }
@@ -274,7 +274,7 @@
     .header { flex-direction: column; gap: 12px; }
     .header-right { align-items: flex-start; }
     .api-input { width: 100%; }
-    .btn-fetch .fetch-label { display: none; }
+    .btn-fetch .fetch-label { display: inline; }
   }
   .compare-field-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
 
@@ -330,7 +330,7 @@
         <div class="country-row">
           <input class="field" type="text" id="countryInput" placeholder="e.g. Germany, Poland, Somalia">
           <button class="btn-fetch" id="fetchBtn" onclick="fetchCountry()">
-            <span class="fetch-icon">◎</span> <span class="fetch-label">Fetch Data</span>
+            <span class="fetch-label">Get Info</span>
           </button>
         </div>
         <div class="country-card" id="countryCard">
@@ -339,7 +339,6 @@
             <div class="cstat"><div class="cstat-label">Population</div><div class="cstat-value" id="cstatPop">—</div></div>
             <div class="cstat"><div class="cstat-label">Density</div><div class="cstat-value" id="cstatDensity">—</div></div>
             <div class="cstat"><div class="cstat-label">Healthcare</div><div class="cstat-value" id="cstatHealth">—</div></div>
-            <div class="cstat"><div class="cstat-label">R₀ modifier</div><div class="cstat-value" id="cstatR0">—</div></div>
           </div>
         </div>
       </div>
@@ -598,13 +597,13 @@ async function fetchCountry() {
   if (!raw) return;
   const btn = document.getElementById('fetchBtn');
   btn.classList.add('loading');
-  btn.innerHTML = '<span class="fetch-icon">◌</span> <span class="fetch-label">Fetching…</span>';
+  btn.innerHTML = '<span class="fetch-label">Loading…</span>';
 
   await new Promise(r => setTimeout(r, 700)); // simulate API delay
 
   const data = MOCK_COUNTRIES[raw];
   btn.classList.remove('loading');
-  btn.innerHTML = '<span class="fetch-icon">◎</span> <span class="fetch-label">Fetch Data</span>';
+  btn.innerHTML = '<span class="fetch-label">Get Info</span>';
 
   if (data) {
     countryData = data;
@@ -649,7 +648,7 @@ function runSimulation() {
     const mortality = selectedVirus.mortality;
 
     document.getElementById('rPeak').textContent = (sir.peakI / cd.population * 100).toFixed(1) + '%';
-    document.getElementById('rDeaths').textContent = (deaths / cd.population * 100).toFixed(1) + '%';
+    document.getElementById('rDeaths').textContent = fmt(deaths);
     const recovered = sir.totalRemoved - deaths;
     document.getElementById('rR0').textContent = (recovered / cd.population * 100).toFixed(1) + '%';
 
@@ -730,8 +729,8 @@ async function runCompare() {
   document.getElementById('cmpName2').textContent = cd2.name;
   document.getElementById('cmp1Peak').textContent = (s1.peakI / cd1.population * 100).toFixed(1) + '%';
   document.getElementById('cmp2Peak').textContent = (s2.peakI / cd2.population * 100).toFixed(1) + '%';
-  document.getElementById('cmp1Deaths').textContent = (Math.round(s1.totalRemoved * cmpSelectedVirus.mortality / 100) / cd1.population * 100).toFixed(1) + '%';
-  document.getElementById('cmp2Deaths').textContent = (Math.round(s2.totalRemoved * cmpSelectedVirus.mortality / 100) / cd2.population * 100).toFixed(1) + '%';
+  document.getElementById('cmp1Deaths').textContent = fmt(Math.round(s1.totalRemoved * cmpSelectedVirus.mortality / 100));
+  document.getElementById('cmp2Deaths').textContent = fmt(Math.round(s2.totalRemoved * cmpSelectedVirus.mortality / 100));
 
   renderSIRChart('cmpChart1', cmpChart1Instance, s1, i => cmpChart1Instance = i);
   renderSIRChart('cmpChart2', cmpChart2Instance, s2, i => cmpChart2Instance = i);
