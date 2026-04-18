@@ -31,7 +31,7 @@ Before the loop starts, four multipliers are calculated from real-world data:
 
 **Temperature factor** scales spread based on how far the country's current temperature is from the virus's optimal climate. The formula `max(0.5, 1.0 - (temp_diff / 40))` means a virus in its ideal climate spreads at full rate, but is never reduced below 50% — cold weather slows it, it doesn't stop it.
 
-**Density factor** is clamped between 0.15 and 1.0 using `density / 500`. A minimum of 75 people/km²is enforced before this calculation — island nations and sparsely populated countries with unusually low recorded densities were producing unrealistically slow spreads in testing, so the floor prevents the model from treating them as nearly empty.
+**Density factor** is clamped between 0.15 and 1.0 using `density / 500`. A minimum of 75 people/km² is enforced before this calculation — island nations and sparsely populated countries with unusually low recorded densities were producing unrealistically slow spreads in testing, so the floor prevents the model from treating them as nearly empty.
 
 **Humidity factor** is a straight linear ratio (`humidity / 100`). Higher humidity increases airborne transmission — this is well-documented for respiratory viruses and generalised here across all virus types as a base assumption.
 
@@ -118,18 +118,6 @@ Recommended: 365 days
 
 ---
 
-### `GET /sim/read_all`
-
-Returns all stored simulation results from the database.
-
----
-
-### `GET /country/read_all`
-
-Returns all stored country environment snapshots.
-
----
-
 ### `GET /compare_sims/{country1}/{country2}/{virus}/{days}`
 
 Runs two full simulations in one request and returns them side-by-side for direct comparison.
@@ -162,6 +150,73 @@ Virus options: `Black_Plague`, `Ebola`, `COVID`, `Spanish_Flu`, `Smallpox`, `Cho
 
 ---
 
+## Frontend
+
+The repo includes `index.html` — a standalone browser UI for the simulator. Open it directly in any browser, point it at your running API, and run simulations without touching the docs.
+
+### Features
+
+- **Step-based input** — country, pathogen, and duration are laid out as a clear three-step flow
+- **Live country fetch** — hit Fetch Data to pull real environmental stats from the API before running
+- **SIR chart** — day-by-day susceptible / infected / recovered curves rendered with Chart.js
+- **Results as percentages** — peak infected, total deaths, and recovered are shown as a share of population so results are immediately comparable across countries of different sizes
+- **Country compare** — run two countries against the same virus side-by-side on independent charts, with its own virus and duration selectors
+- **Risk badge** — each result is tagged Extreme / High / Moderate / Low Risk based on mortality rate and R₀
+- **Mobile responsive** — works on narrow screens; inputs stack and charts scale down cleanly
+
+### Wiring it to the API
+
+The frontend ships with a mock country database so it runs standalone without a live backend. To connect it to your real API, replace two sections in `index.html`:
+
+**1. Country fetch** — in `fetchCountry()`, replace the mock lookup with a call to `GET /{country}`:
+
+```javascript
+async function fetchCountry() {
+  const raw = document.getElementById('countryInput').value.trim();
+  if (!raw) return;
+
+  const btn = document.getElementById('fetchBtn');
+  btn.classList.add('loading');
+  btn.innerHTML = '<span class="fetch-icon">◌</span> <span class="fetch-label">Fetching…</span>';
+
+  const res = await fetch(`${document.getElementById('apiUrl').value}/${raw}`);
+  const data = await res.json();
+
+  countryData = {
+    name: data.country,
+    population: data.population,
+    r0mod: 1.0   // optionally derive from healthcare score
+  };
+
+  document.getElementById('countryCardName').textContent = data.country;
+  document.getElementById('cstatPop').textContent = fmt(data.population);
+  document.getElementById('cstatDensity').textContent = data.density + '/km²';
+  document.getElementById('cstatHealth').textContent = (data.healthcare * 100).toFixed(0) + '/100';
+  document.getElementById('cstatR0').textContent = 'x1.00';
+  document.getElementById('countryCard').classList.add('visible');
+
+  btn.classList.remove('loading');
+  btn.innerHTML = '<span class="fetch-icon">◎</span> <span class="fetch-label">Fetch Data</span>';
+}
+```
+
+**2. Simulation run** — in `runSimulation()`, replace the local `runSIR()` call with a call to `POST /sim/{country}/{virus}/{days}`:
+
+```javascript
+const virusName = selectedVirus.name.replace(' ', '_').replace('-', '');
+const res = await fetch(
+  `${apiUrl}/sim/${cd.name}/${virusName}/${duration}`,
+  { method: 'POST' }
+);
+const data = await res.json();
+// data.simulation.history is the day-by-day array
+// data.simulation.dead / recovered / healthy are the final counts
+```
+
+The compare tab follows the same pattern using `GET /compare_sims/{country1}/{country2}/{virus}/{days}`.
+
+---
+
 ## Setup
 
 ### Requirements
@@ -191,7 +246,15 @@ docker compose up --build
 
 The API will be available at `http://localhost:8000`. The database starts up first — Docker Compose waits for Postgres to pass its health check before launching the API.
 
-### 4. Interactive docs
+### 4. Open the frontend
+
+```
+open index.html
+```
+
+Enter `http://localhost:8000` in the API field at the top, then run simulations directly from the browser.
+
+### 5. Interactive docs
 
 ```
 http://localhost:8000/docs
@@ -209,8 +272,6 @@ The test suite covers:
 
 - Country data retrieval
 - Full simulation run
-- Read all simulations
-- Read all country records
 - Simulation comparison with fixture-seeded data and teardown
 
 ## External APIs
