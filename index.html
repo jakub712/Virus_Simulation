@@ -348,22 +348,16 @@
           <div class="country-stats">
             <div class="cstat"><div class="cstat-label">Population</div><div class="cstat-value" id="cstatPop">—</div></div>
             <div class="cstat"><div class="cstat-label">Density /km²</div><div class="cstat-value" id="cstatDensity">—</div></div>
-            <div class="cstat"><div class="cstat-label">Temperature</div><div class="cstat-value" id="cstatTemp">—</div></div>
+            <div class="cstat"><div class="cstat-label">Healthcare</div><div class="cstat-value" id="cstatHealth">—</div></div>
           </div>
           <div class="country-stats-row2">
+            <div class="cstat"><div class="cstat-label">Temperature</div><div class="cstat-value" id="cstatTemp">—</div></div>
             <div class="cstat"><div class="cstat-label">Humidity</div><div class="cstat-value" id="cstatHumidity">—</div></div>
             <div class="cstat">
               <div class="cstat-label">Air Quality</div>
               <div style="display:flex;align-items:center;gap:6px;margin-top:4px">
                 <div class="aqi-dot" id="cstatAqiDot"></div>
                 <div class="cstat-value" id="cstatAqi">—</div>
-              </div>
-            </div>
-            <div class="cstat">
-              <div class="cstat-label">Healthcare</div>
-              <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
-                <div class="health-track"><div class="health-fill" id="cstatHealthBar" style="width:0%"></div></div>
-                <div class="cstat-value" id="cstatHealth">—</div>
               </div>
             </div>
           </div>
@@ -649,7 +643,6 @@ async function fetchCountry() {
 
     const healthPct = (data.healthcare * 100).toFixed(0);
     document.getElementById('cstatHealth').textContent = healthPct + '/100';
-    document.getElementById('cstatHealthBar').style.width = healthPct + '%';
 
     document.getElementById('countryCard').classList.add('visible');
   } catch {
