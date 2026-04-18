@@ -131,6 +131,16 @@
   .country-card.visible { display: block; }
   .country-card-name { font-weight: 500; font-size: 14px; color: #fff; margin-bottom: 10px; }
   .country-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .country-stats-row2 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+  .aqi-bar-wrap { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
+  .aqi-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .aqi-1 { background: #4ade80; }
+  .aqi-2 { background: #a3e635; }
+  .aqi-3 { background: #fbbf24; }
+  .aqi-4 { background: #f97316; }
+  .aqi-5 { background: #f87171; }
+  .health-track { flex: 1; height: 3px; background: var(--bg2); border-radius: 2px; overflow: hidden; max-width: 60px; }
+  .health-fill { height: 100%; border-radius: 2px; background: var(--cyan); }
 
   .cstat-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
   .cstat-value { font-family: var(--mono); font-size: 13px; color: var(--cyan); }
@@ -337,8 +347,25 @@
           <div class="country-card-name" id="countryCardName">—</div>
           <div class="country-stats">
             <div class="cstat"><div class="cstat-label">Population</div><div class="cstat-value" id="cstatPop">—</div></div>
-            <div class="cstat"><div class="cstat-label">Density</div><div class="cstat-value" id="cstatDensity">—</div></div>
-            <div class="cstat"><div class="cstat-label">Healthcare</div><div class="cstat-value" id="cstatHealth">—</div></div>
+            <div class="cstat"><div class="cstat-label">Density /km²</div><div class="cstat-value" id="cstatDensity">—</div></div>
+            <div class="cstat"><div class="cstat-label">Temperature</div><div class="cstat-value" id="cstatTemp">—</div></div>
+          </div>
+          <div class="country-stats-row2">
+            <div class="cstat"><div class="cstat-label">Humidity</div><div class="cstat-value" id="cstatHumidity">—</div></div>
+            <div class="cstat">
+              <div class="cstat-label">Air Quality</div>
+              <div style="display:flex;align-items:center;gap:6px;margin-top:4px">
+                <div class="aqi-dot" id="cstatAqiDot"></div>
+                <div class="cstat-value" id="cstatAqi">—</div>
+              </div>
+            </div>
+            <div class="cstat">
+              <div class="cstat-label">Healthcare</div>
+              <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
+                <div class="health-track"><div class="health-fill" id="cstatHealthBar" style="width:0%"></div></div>
+                <div class="cstat-value" id="cstatHealth">—</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -611,8 +638,19 @@ async function fetchCountry() {
     countryData = { name: data.country, population: data.population, density: data.density, healthcare: data.healthcare };
     document.getElementById('countryCardName').textContent = data.country;
     document.getElementById('cstatPop').textContent = fmt(data.population);
-    document.getElementById('cstatDensity').textContent = data.density.toFixed(1) + '/km²';
-    document.getElementById('cstatHealth').textContent = (data.healthcare * 100).toFixed(0) + '/100';
+    document.getElementById('cstatDensity').textContent = data.density.toFixed(1);
+    document.getElementById('cstatTemp').textContent = data.temperature.toFixed(1) + '°C';
+    document.getElementById('cstatHumidity').textContent = data.humidity + '%';
+
+    const aqiLabels = ['', 'Good', 'Fair', 'Moderate', 'Poor', 'Very Poor'];
+    document.getElementById('cstatAqi').textContent = aqiLabels[data.air_quality] || data.air_quality;
+    const aqiDot = document.getElementById('cstatAqiDot');
+    aqiDot.className = 'aqi-dot aqi-' + data.air_quality;
+
+    const healthPct = (data.healthcare * 100).toFixed(0);
+    document.getElementById('cstatHealth').textContent = healthPct + '/100';
+    document.getElementById('cstatHealthBar').style.width = healthPct + '%';
+
     document.getElementById('countryCard').classList.add('visible');
   } catch {
     countryData = null;
