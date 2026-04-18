@@ -416,13 +416,12 @@
           <div class="result-stats">
             <div class="stat-card"><div class="stat-label">Peak Infected</div><div class="stat-value cyan" id="rPeak">—</div></div>
             <div class="stat-card"><div class="stat-label">Total Deaths</div><div class="stat-value danger" id="rDeaths">—</div></div>
-            <div class="stat-card"><div class="stat-label">Days to Peak</div><div class="stat-value" id="rDaysPeak">—</div></div>
-            <div class="stat-card"><div class="stat-label">R₀</div><div class="stat-value warn" id="rR0">—</div></div>
+            <div class="stat-card"><div class="stat-label">Recovered</div><div class="stat-value warn" id="rR0">—</div></div>
           </div>
           <div class="chart-legend">
             <div class="legend-item"><div class="legend-dot" style="background:#00e8c6"></div>Susceptible</div>
             <div class="legend-item"><div class="legend-dot" style="background:#f87171"></div>Infected</div>
-            <div class="legend-item"><div class="legend-dot" style="background:#94a3b8"></div>Recovered / Removed</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#94a3b8"></div>Recovered</div>
           </div>
           <div class="chart-wrap"><canvas id="sirChart" role="img" aria-label="SIR epidemic curve showing susceptible, infected and recovered populations over time">SIR epidemic model chart</canvas></div>
           <div class="result-meta">
@@ -635,7 +634,7 @@ function runSimulation() {
     return;
   }
 
-  const cd = countryData || { name: document.getElementById('countryInput').value.trim(), population: 10000000, r0mod: 1.0 };
+  const cd = countryData || MOCK_COUNTRIES[rawCountry] || { name: document.getElementById('countryInput').value.trim(), population: 10000000, r0mod: 1.0 };
   const btn = document.getElementById('runBtn');
   btn.classList.add('running');
   btn.textContent = '◌ Running…';
@@ -649,10 +648,11 @@ function runSimulation() {
     const r0 = (selectedVirus.beta / selectedVirus.gamma).toFixed(2);
     const mortality = selectedVirus.mortality;
 
-    document.getElementById('rPeak').textContent = fmt(sir.peakI);
-    document.getElementById('rDeaths').textContent = fmt(deaths);
-    document.getElementById('rDaysPeak').textContent = sir.peakDay + 'd';
-    document.getElementById('rR0').textContent = r0;
+    document.getElementById('rPeak').textContent = (sir.peakI / cd.population * 100).toFixed(1) + '%';
+    document.getElementById('rDeaths').textContent = (deaths / cd.population * 100).toFixed(1) + '%';
+    const recovered = sir.totalRemoved - deaths;
+    document.getElementById('rR0').textContent = (recovered / cd.population * 100).toFixed(1) + '%';
+
     document.getElementById('rContext').textContent =
       selectedVirus.name + ' · ' + cd.name + ' (pop. ' + fmt(cd.population) + ') · ' + duration + ' days';
 
