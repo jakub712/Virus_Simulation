@@ -311,7 +311,7 @@
       <div class="live-badge"><span class="live-dot"></span> Live Data</div>
       <div class="api-input-wrap">
         <span class="api-label">API</span>
-        <input class="api-input" type="text" id="apiUrl" value="https://virus-simula..." placeholder="API base URL">
+        <input class="api-input" type="text" id="apiUrl" value="https://virus-simulation.onrender.com" placeholder="API base URL">
       </div>
     </div>
   </header>
@@ -558,6 +558,10 @@ function runSIR(population, beta, gamma, days, r0mod = 1.0) {
   return { labels, dataS, dataI, dataR, peakI, peakDay, totalRemoved };
 }
 
+function getApiUrl() {
+  return document.getElementById('apiUrl').value.trim().replace(/\/$/, '');
+}
+
 function fmt(n) {
   if (n >= 1e9) return (n/1e9).toFixed(1) + 'B';
   if (n >= 1e6) return (n/1e6).toFixed(1) + 'M';
@@ -593,32 +597,32 @@ function switchTab(tabId, btn) {
 
 // ─── COUNTRY FETCH ────────────────────────────────────────
 async function fetchCountry() {
-  const raw = document.getElementById('countryInput').value.trim().toLowerCase();
-  if (!raw) return;
+  const country = document.getElementById('countryInput').value.trim();
+  if (!country) return;
   const btn = document.getElementById('fetchBtn');
   btn.classList.add('loading');
   btn.innerHTML = '<span class="fetch-label">Loading…</span>';
 
-  await new Promise(r => setTimeout(r, 700)); // simulate API delay
+  try {
+    const res = await fetch(`${getApiUrl()}/${encodeURIComponent(country)}`);
+    if (!res.ok) throw new Error('Not found');
+    const data = await res.json();
 
-  const data = MOCK_COUNTRIES[raw];
-  btn.classList.remove('loading');
-  btn.innerHTML = '<span class="fetch-label">Get Info</span>';
-
-  if (data) {
-    countryData = data;
-    document.getElementById('countryCardName').textContent = data.name;
+    countryData = { name: data.country, population: data.population, density: data.density, healthcare: data.healthcare };
+    document.getElementById('countryCardName').textContent = data.country;
     document.getElementById('cstatPop').textContent = fmt(data.population);
-    document.getElementById('cstatDensity').textContent = data.density + '/km²';
-    document.getElementById('cstatHealth').textContent = data.healthcare + '/100';
-    document.getElementById('cstatR0').textContent = 'x' + data.r0mod.toFixed(2);
+    document.getElementById('cstatDensity').textContent = data.density.toFixed(1) + '/km²';
+    document.getElementById('cstatHealth').textContent = (data.healthcare * 100).toFixed(0) + '/100';
     document.getElementById('countryCard').classList.add('visible');
-  } else {
+  } catch {
     countryData = null;
     document.getElementById('countryCard').classList.remove('visible');
     document.getElementById('countryInput').style.borderColor = 'rgba(248,113,113,0.5)';
     setTimeout(() => { document.getElementById('countryInput').style.borderColor = ''; }, 1500);
   }
+
+  btn.classList.remove('loading');
+  btn.innerHTML = '<span class="fetch-label">Get Info</span>';
 }
 
 document.getElementById('countryInput').addEventListener('keydown', e => { if (e.key === 'Enter') fetchCountry(); });
