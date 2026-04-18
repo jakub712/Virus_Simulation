@@ -434,7 +434,7 @@
         </div>
         <div id="resultsContent" style="display:none">
           <div class="result-stats">
-            <div class="stat-card"><div class="stat-label">Peak Infected</div><div class="stat-value cyan" id="rPeak">—</div></div>
+            <div class="stat-card"><div class="stat-label">Recovered</div><div class="stat-value cyan" id="rPeak">—</div></div>
             <div class="stat-card"><div class="stat-label">Total Deaths</div><div class="stat-value danger" id="rDeaths">—</div></div>
             <div class="stat-card"><div class="stat-label">Recovered</div><div class="stat-value warn" id="rR0">—</div></div>
           </div>
@@ -504,7 +504,7 @@
               <div class="compare-col-header" id="cmpName1">Country 1</div>
               <div class="chart-wrap" style="height:220px"><canvas id="cmpChart1" role="img" aria-label="Epidemic curve for country 1">Country 1 SIR chart</canvas></div>
               <div class="result-stats" style="grid-template-columns:1fr 1fr; margin-top:12px">
-                <div class="stat-card"><div class="stat-label">Peak Infected</div><div class="stat-value cyan" id="cmp1Peak">—</div></div>
+                <div class="stat-card"><div class="stat-label">Recovered</div><div class="stat-value cyan" id="cmp1Peak">—</div></div>
                 <div class="stat-card"><div class="stat-label">Deaths</div><div class="stat-value danger" id="cmp1Deaths">—</div></div>
               </div>
             </div>
@@ -512,7 +512,7 @@
               <div class="compare-col-header" id="cmpName2">Country 2</div>
               <div class="chart-wrap" style="height:220px"><canvas id="cmpChart2" role="img" aria-label="Epidemic curve for country 2">Country 2 SIR chart</canvas></div>
               <div class="result-stats" style="grid-template-columns:1fr 1fr; margin-top:12px">
-                <div class="stat-card"><div class="stat-label">Peak Infected</div><div class="stat-value cyan" id="cmp2Peak">—</div></div>
+                <div class="stat-card"><div class="stat-label">Recovered</div><div class="stat-value cyan" id="cmp2Peak">—</div></div>
                 <div class="stat-card"><div class="stat-label">Deaths</div><div class="stat-value danger" id="cmp2Deaths">—</div></div>
               </div>
             </div>
@@ -682,10 +682,8 @@ function runSimulation() {
     const r0 = (selectedVirus.beta / selectedVirus.gamma).toFixed(2);
     const mortality = selectedVirus.mortality;
 
-    document.getElementById('rPeak').textContent = (sir.peakI / cd.population * 100).toFixed(1) + '%';
-    document.getElementById('rDeaths').textContent = fmt(deaths);
-    const recovered = sir.totalRemoved - deaths;
-    document.getElementById('rR0').textContent = (recovered / cd.population * 100).toFixed(1) + '%';
+    document.getElementById('rPeak').textContent = fmt(sim.recovered);
+    document.getElementById('rDeaths').textContent = fmt(sim.dead);
 
     document.getElementById('rContext').textContent =
       selectedVirus.name + ' · ' + cd.name + ' (pop. ' + fmt(cd.population) + ') · ' + duration + ' days';
@@ -749,29 +747,45 @@ function renderSIRChart(canvasId, existingInstance, sir, callback) {
 
 // ─── COMPARE ─────────────────────────────────────────────
 async function runCompare() {
-  const c1 = document.getElementById('cmp1').value.trim().toLowerCase();
-  const c2 = document.getElementById('cmp2').value.trim().toLowerCase();
+  const c1 = document.getElementById('cmp1').value.trim();
+  const c2 = document.getElementById('cmp2').value.trim();
   if (!c1 || !c2) return;
 
-  const cd1 = MOCK_COUNTRIES[c1] || { name: document.getElementById('cmp1').value, population: 10000000, r0mod: 1.0 };
-  const cd2 = MOCK_COUNTRIES[c2] || { name: document.getElementById('cmp2').value, population: 10000000, r0mod: 1.0 };
   const cmpDays = parseInt(document.getElementById('cmpDurationSlider').value);
+  const btn = document.querySelector('.btn-compare');
+  btn.textContent = '◌ Running…';
 
-  const s1 = runSIR(cd1.population, cmpSelectedVirus.beta, cmpSelectedVirus.gamma, cmpDays, cd1.r0mod || 1.0);
-  const s2 = runSIR(cd2.population, cmpSelectedVirus.beta, cmpSelectedVirus.gamma, cmpDays, cd2.r0mod || 1.0);
+  try {
+    const res = await fetch(
+      `${getApiUrl()}/compare_sims/${encodeURIComponent(c1)}/${encodeURIComponent(c2)}/${cmpSelectedVirus.api}/${cmpDays}`
+    );
+    if (!res.ok) throw new Error('Compare failed');
+    const data = await res.json();
 
-  document.getElementById('cmpName1').textContent = cd1.name;
-  document.getElementById('cmpName2').textContent = cd2.name;
-  document.getElementById('cmp1Peak').textContent = (s1.peakI / cd1.population * 100).toFixed(1) + '%';
-  document.getElementById('cmp2Peak').textContent = (s2.peakI / cd2.population * 100).toFixed(1) + '%';
-  document.getElementById('cmp1Deaths').textContent = fmt(Math.round(s1.totalRemoved * cmpSelectedVirus.mortality / 100));
-  document.getElementById('cmp2Deaths').textContent = fmt(Math.round(s2.totalRemoved * cmpSelectedVirus.mortality / 100));
+    const s1 = data.simulation1;
+    const s2 = data.simulation2;
 
-  renderSIRChart('cmpChart1', cmpChart1Instance, s1, i => cmpChart1Instance = i);
-  renderSIRChart('cmpChart2', cmpChart2Instance, s2, i => cmpChart2Instance = i);
+    const sir1 = historyToSIR(s1.history);
+    const sir2 = historyToSIR(s2.history);
 
-  document.getElementById('compareEmpty').style.display = 'none';
-  document.getElementById('compareContent').style.display = 'block';
+    document.getElementById('cmpName1').textContent = data.country1;
+    document.getElementById('cmpName2').textContent = data.country2;
+    document.getElementById('cmp1Peak').textContent = fmt(s1.recovered);
+    document.getElementById('cmp2Peak').textContent = fmt(s2.recovered);
+    document.getElementById('cmp1Deaths').textContent = fmt(s1.dead);
+    document.getElementById('cmp2Deaths').textContent = fmt(s2.dead);
+
+    renderSIRChart('cmpChart1', cmpChart1Instance, sir1, i => cmpChart1Instance = i);
+    renderSIRChart('cmpChart2', cmpChart2Instance, sir2, i => cmpChart2Instance = i);
+
+    document.getElementById('compareEmpty').style.display = 'none';
+    document.getElementById('compareContent').style.display = 'block';
+
+  } catch {
+    alert('Error: one or both countries not found. Check names and try again.');
+  }
+
+  btn.innerHTML = '◎ Compare Countries';
 }
 
 
