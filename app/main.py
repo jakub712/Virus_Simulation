@@ -85,14 +85,6 @@ def run_simulation(db:db_dependancy, country:str, days:int = Path(description="r
         "simulation": sim_results,
     }
 
-@app.get("/sim/read_all",status_code= status.HTTP_200_OK)
-def read_all_sims(db:db_dependancy):
-    return db.query(SimResults).all()
-
-@app.get("/country/read_all", status_code=status.HTTP_200_OK)
-def read_all_population_info(db:db_dependancy):
-    return db.query(Population_Data).all()
-
 @app.get("/compare_sims/{country1}/{country2}/{virus}/{days}", status_code= status.HTTP_200_OK)
 def compare_simulations(db:db_dependancy, country1:str, country2:str, days:int = Path(description="recomended is 365"), virus:str = Path(description="Options: Black_Plague, Ebola, COVID, Spanish_Flu, Smallpox, Cholera")):
     try:

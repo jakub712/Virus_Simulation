@@ -4,461 +4,706 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pathogen Simulator</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
   :root {
-    --bg: #050810;
-    --surface: #0c1120;
-    --surface2: #111827;
-    --border: #1e2d45;
-    --accent: #00e5ff;
-    --accent2: #ff3d5a;
-    --text: #e2e8f0;
-    --muted: #64748b;
-    --healthy: #00e5ff;
-    --infected: #ff9500;
-    --recovered: #00d084;
-    --dead: #ff3d5a;
+    --bg:       #07090e;
+    --bg2:      #0d1018;
+    --bg3:      #121520;
+    --border:   rgba(255,255,255,0.07);
+    --border2:  rgba(255,255,255,0.13);
+    --cyan:     #00e8c6;
+    --cyan-dim: rgba(0,232,198,0.12);
+    --cyan-mid: rgba(0,232,198,0.35);
+    --text:     #e2e8f0;
+    --muted:    #64748b;
+    --danger:   #f87171;
+    --warn:     #fbbf24;
+    --success:  #4ade80;
+    --mono:     'Space Mono', monospace;
+    --sans:     'DM Sans', sans-serif;
+    --radius:   6px;
   }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; min-height: 100vh; overflow-x: hidden; }
+
+  html { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 15px; line-height: 1.6; }
+  body { min-height: 100vh; }
+
+  /* Grid texture */
   body::before {
-    content: ''; position: fixed; inset: 0;
-    background: radial-gradient(ellipse 80% 50% at 20% 0%, rgba(0,229,255,0.04) 0%, transparent 60%),
-                radial-gradient(ellipse 60% 40% at 80% 100%, rgba(255,61,90,0.04) 0%, transparent 60%);
-    pointer-events: none; z-index: 0;
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(0,232,198,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,232,198,0.025) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
   }
-  .grid-bg {
-    position: fixed; inset: 0;
-    background-image: linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
-    background-size: 40px 40px; pointer-events: none; z-index: 0;
+
+  .page { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  /* ─── HEADER ─── */
+  .header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 2.5rem; }
+
+  .header-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; color: var(--cyan); text-transform: uppercase; margin-bottom: 0.5rem; }
+  .header-title { font-family: var(--mono); font-size: clamp(2rem, 6vw, 3.5rem); font-weight: 700; line-height: 0.9; text-transform: uppercase; letter-spacing: -0.02em; color: #fff; }
+  .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; padding-top: 4px; }
+  .live-badge { display: flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; }
+  .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--success); box-shadow: 0 0 8px var(--success); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+  .api-input-wrap { display: flex; align-items: center; gap: 8px; }
+  .api-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; }
+  .api-input {
+    font-family: var(--mono); font-size: 11px; background: var(--bg3);
+    border: 1px solid var(--border2); border-radius: var(--radius);
+    color: var(--cyan); padding: 5px 10px; width: 200px; outline: none;
   }
-  .container { position: relative; z-index: 1; max-width: 1300px; margin: 0 auto; padding: 40px 24px; }
-  header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 28px; padding-bottom: 22px; border-bottom: 1px solid var(--border); }
-  .logo-tag { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--accent); letter-spacing: 3px; text-transform: uppercase; display: block; margin-bottom: 4px; }
-  h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; line-height: 1; letter-spacing: -2px; background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.6) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .status-badge { display: flex; align-items: center; gap: 8px; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 1px; }
-  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: pulse 2s ease-in-out infinite; }
-  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.8)} }
-  .api-bar { display: flex; gap: 8px; margin-bottom: 22px; align-items: center; }
-  .api-tag { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 1px; white-space: nowrap; }
-  .api-bar input { max-width: 300px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; color: var(--muted); font-family: 'Space Mono', monospace; font-size: 11px; outline: none; transition: border-color .2s; }
-  .api-bar input:focus { border-color: var(--accent); }
-  .main-grid { display: grid; grid-template-columns: 340px 1fr; gap: 18px; align-items: start; }
-  @media(max-width:960px){.main-grid{grid-template-columns:1fr}}
-  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-  .panel-hdr { padding: 13px 17px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
-  .pdot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
-  .ptitle { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
-  .pbody { padding: 16px; }
-  .field { margin-bottom: 13px; }
-  .field label { display: block; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
-  .field input,.field select { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; color: var(--text); font-family: 'Space Mono', monospace; font-size: 12px; outline: none; transition: border-color .2s; appearance: none; }
-  .field input:focus,.field select:focus{border-color:var(--accent)}
-  .field input::placeholder{color:var(--muted)}
-  .vgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
-  .voption { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; cursor: pointer; transition: all .2s; text-align: left; }
-  .voption:hover{border-color:var(--accent)}
-  .voption.selected{border-color:var(--accent);background:rgba(0,229,255,.06)}
-  .vname{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;margin-bottom:3px;color:var(--text)}
-  .vmeta{font-family:'Space Mono',monospace;font-size:11px;color:#94a3b8}
-  .ddays{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--accent);text-align:center;margin:5px 0}
-  .dlabel{font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);text-align:center;letter-spacing:2px}
-  input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
-  .btn{padding:11px;border:none;border-radius:8px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s;width:100%;margin-top:5px}
-  .btn-p{background:var(--accent);color:var(--bg)}
-  .btn-p:hover{background:#33ecff;transform:translateY(-1px)}
-  .btn-p:active{transform:translateY(0)}
-  .btn-p:disabled{opacity:.4;cursor:not-allowed;transform:none}
-  .btn-o{background:transparent;border:1px solid var(--accent);color:var(--accent);width:auto;padding:9px 16px;margin-top:0}
-  .btn-o:hover{background:rgba(0,229,255,.08)}
-  .btn-sm{font-size:10px;padding:7px 13px}
-  .tabs{display:flex;border-bottom:1px solid var(--border);overflow-x:auto}
-  .tab{padding:12px 16px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;border-top:none;border-left:none;border-right:none;background:none;transition:all .2s;white-space:nowrap}
-  .tab:hover{color:var(--text)}
-  .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
-  .tc{display:none;padding:20px}
-  .tc.active{display:block}
-  .empty{text-align:center;padding:50px 20px;color:var(--muted)}
-  .ei{font-size:40px;margin-bottom:14px;opacity:.3}
-  .et{font-family:'Space Mono',monospace;font-size:11px;line-height:2}
-  .srow{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:18px}
-  @media(max-width:600px){.srow{grid-template-columns:repeat(2,1fr)}}
-  .sc{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:11px;position:relative;overflow:hidden}
-  .sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
-  .sc.h::before{background:var(--healthy)}.sc.i::before{background:var(--infected)}.sc.r::before{background:var(--recovered)}.sc.d::before{background:var(--dead)}
-  .slabel{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
-  .sc.h .slabel{color:var(--healthy)}.sc.i .slabel{color:var(--infected)}.sc.r .slabel{color:var(--recovered)}.sc.d .slabel{color:var(--dead)}
-  .sval{font-family:'Space Mono',monospace;font-size:clamp(13px,1.8vw,17px);font-weight:700}
-  .spct{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);margin-top:2px}
-  .crow{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:15px}
-  @media(max-width:640px){.crow{grid-template-columns:1fr}}
-  .cw{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:13px}
-  .ct{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
-  .meta{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:16px}
-  .chip{display:flex;align-items:center;gap:5px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:3px 10px;font-family:'Space Mono',monospace;font-size:10px;color:var(--muted)}
-  .chip span{color:var(--text)}
-  .cmpgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:14px}
-  @media(max-width:600px){.cmpgrid{grid-template-columns:1fr}}
-  .cmp-inputs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:13px}
-  @media(max-width:600px){.cmp-inputs{grid-template-columns:1fr}}
-  .cmpc{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:13px}
-  .cmpct{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:9px;padding-bottom:8px;border-bottom:1px solid var(--border)}
-  .cmpr{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04)}
-  .cmpr:last-child{border-bottom:none}
-  .cmpk{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted)}
-  .cmpv{font-family:'Space Mono',monospace;font-size:10px;font-weight:700}
-  .loading{display:none;text-align:center;padding:36px}
-  .loading.active{display:block}
-  .loader{width:34px;height:34px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  .ltxt{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px}
-  .err{background:rgba(255,61,90,.08);border:1px solid rgba(255,61,90,.3);border-radius:8px;padding:9px 13px;font-family:'Space Mono',monospace;font-size:11px;color:var(--accent2);margin-bottom:12px;display:none}
-  .err.active{display:block}
-  .ccrd{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px}
-  .cctitle{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--accent);margin-bottom:10px;padding-bottom:9px;border-bottom:1px solid var(--border)}
-  .ccrow{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04)}
-  .ccrow:last-child{border-bottom:none}
-  .cck{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted)}
-  .ccv{font-family:'Space Mono',monospace;font-size:10px;font-weight:700}
-  .aqibar{height:4px;border-radius:2px;margin-top:5px;background:var(--border);overflow:hidden}
-  .aqifill{height:100%;border-radius:2px;transition:width .6s ease}
-  .rtbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:9px}
-  .rcount{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted)}
-  .rtbl{width:100%;border-collapse:collapse}
-  .rtbl th{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:7px 9px;text-align:left;border-bottom:1px solid var(--border)}
-  .rtbl td{font-family:'Space Mono',monospace;font-size:11px;padding:8px 9px;border-bottom:1px solid rgba(255,255,255,.04)}
-  .rtbl tr:last-child td{border-bottom:none}
-  .rtbl tr:hover td{background:rgba(255,255,255,.02)}
-  .badge{display:inline-block;padding:2px 8px;border-radius:20px;font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1px}
-  .twrap{overflow-x:auto}
-  .cmp-vgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:13px}
-  .cmp-days{font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--accent);text-align:center;margin:4px 0}
+  .api-input:focus { border-color: var(--cyan-mid); }
+
+  /* ─── PANEL ─── */
+  .panel {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+  }
+  .panel-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(255,255,255,0.02);
+  }
+  .panel-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); flex-shrink: 0; }
+  .panel-title { font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; }
+  .panel-body { padding: 24px; }
+
+  /* ─── STEP LAYOUT ─── */
+  .step { margin-bottom: 28px; }
+  .step:last-child { margin-bottom: 0; }
+  .step-label {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 12px;
+  }
+  .step-num {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--bg3); border: 1px solid var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; color: var(--cyan); flex-shrink: 0;
+  }
+  .step-divider {
+    border: none; border-top: 1px solid var(--border);
+    margin: 24px 0;
+  }
+
+  /* ─── COUNTRY INPUT ─── */
+  .country-row { display: flex; gap: 10px; }
+  .field {
+    flex: 1;
+    background: var(--bg3); border: 1px solid var(--border2);
+    border-radius: var(--radius); padding: 10px 14px;
+    font-family: var(--sans); font-size: 14px; color: var(--text);
+    outline: none; transition: border-color 0.2s;
+  }
+  .field::placeholder { color: var(--muted); }
+  .field:focus { border-color: var(--cyan-mid); }
+  .btn-fetch {
+    display: flex; align-items: center; gap: 7px;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    background: var(--bg3); border: 1px solid var(--border2); border-radius: var(--radius);
+    color: var(--muted); padding: 10px 16px; cursor: pointer; white-space: nowrap;
+    transition: all 0.2s; flex-shrink: 0;
+  }
+  .btn-fetch:hover { border-color: var(--cyan-mid); color: var(--cyan); }
+  .btn-fetch.loading { border-color: var(--cyan-mid); color: var(--cyan); }
+  .fetch-icon { font-size: 12px; }
+
+  /* country data card */
+  .country-card {
+    margin-top: 12px; padding: 14px 16px;
+    background: var(--bg3); border: 1px solid var(--border2); border-radius: var(--radius);
+    display: none; gap: 0;
+  }
+  .country-card.visible { display: block; }
+  .country-card-name { font-weight: 500; font-size: 14px; color: #fff; margin-bottom: 10px; }
+  .country-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+
+  .cstat-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
+  .cstat-value { font-family: var(--mono); font-size: 13px; color: var(--cyan); }
+
+  /* ─── VIRUS CHIPS ─── */
+  .virus-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .virus-chip {
+    display: flex; flex-direction: column;
+    padding: 10px 16px; border-radius: var(--radius);
+    border: 1px solid var(--border2); background: var(--bg3);
+    cursor: pointer; transition: all 0.15s; min-width: 130px;
+  }
+  .virus-chip:hover { border-color: var(--border2); background: rgba(255,255,255,0.04); }
+  .virus-chip.selected { border-color: var(--cyan); background: var(--cyan-dim); }
+  .chip-name { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+  .chip-mortality { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+  .virus-chip.selected .chip-name { color: var(--cyan); }
+  .virus-chip.selected .chip-mortality { color: rgba(0,232,198,0.65); }
+
+  /* mortality color hints */
+  .virus-chip[data-severity="critical"].selected { border-color: var(--danger); background: rgba(248,113,113,0.08); }
+  .virus-chip[data-severity="critical"].selected .chip-name { color: var(--danger); }
+  .virus-chip[data-severity="critical"].selected .chip-mortality { color: rgba(248,113,113,0.6); }
+  .virus-chip[data-severity="high"].selected { border-color: var(--warn); background: rgba(251,191,36,0.08); }
+  .virus-chip[data-severity="high"].selected .chip-name { color: var(--warn); }
+  .virus-chip[data-severity="high"].selected .chip-mortality { color: rgba(251,191,36,0.6); }
+
+  /* ─── SLIDER ─── */
+
+  .slider-meta { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+  .slider-value { font-family: var(--mono); font-size: 28px; font-weight: 700; color: var(--cyan); }
+  .slider-unit { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; color: var(--muted); margin-left: 6px; text-transform: uppercase; }
+  .slider-range-labels { display: flex; justify-content: space-between; }
+  .slider-range-label { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+
+  input[type=range] {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 4px; border-radius: 2px;
+    background: var(--bg3); border: 1px solid var(--border2);
+    outline: none; margin: 8px 0;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--bg); border: 2px solid var(--cyan);
+    cursor: pointer; transition: box-shadow 0.2s;
+  }
+  input[type=range]::-webkit-slider-thumb:hover { box-shadow: 0 0 0 5px var(--cyan-dim); }
+
+  /* ─── RUN BUTTON ─── */
+  .btn-run {
+    width: 100%; padding: 14px;
+    font-family: var(--mono); font-size: 13px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
+    background: var(--cyan); color: #07090e; border: none; border-radius: var(--radius);
+    cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px;
+    margin-top: 24px;
+  }
+  .btn-run:hover { filter: brightness(1.1); }
+  .btn-run:active { transform: scale(0.99); }
+  .btn-run:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-run.running { background: var(--bg3); color: var(--cyan); border: 1px solid var(--cyan); }
+
+  /* ─── TABS ─── */
+  .tabs-nav {
+    display: flex; border-bottom: 1px solid var(--border);
+    background: var(--bg2); border-radius: 10px 10px 0 0;
+    overflow: hidden;
+  }
+  .tab-btn {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 14px 22px; background: none; border: none; color: var(--muted);
+    cursor: pointer; transition: color 0.2s; border-bottom: 2px solid transparent;
+    position: relative; top: 1px;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--cyan); border-bottom-color: var(--cyan); }
+
+  .tabs-body {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-top: none; border-radius: 0 0 10px 10px; min-height: 380px;
+  }
+  .tab-pane { display: none; padding: 28px; }
+  .tab-pane.active { display: block; }
+
+  /* ─── EMPTY STATE ─── */
+  .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 64px 20px; gap: 12px; }
+  .empty-icon { width: 40px; height: 40px; opacity: 0.2; }
+  .empty-title { font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); text-align: center; }
+  .empty-sub { font-size: 12px; color: rgba(100,116,139,0.6); text-align: center; }
+
+  /* ─── RESULTS ─── */
+  .result-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+  .stat-card {
+    background: var(--bg3); border: 1px solid var(--border2); border-radius: var(--radius);
+    padding: 14px 16px;
+  }
+  .stat-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .stat-value { font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--text); }
+  .stat-value.cyan { color: var(--cyan); }
+  .stat-value.danger { color: var(--danger); }
+  .stat-value.warn { color: var(--warn); }
+
+  .chart-wrap { position: relative; height: 300px; width: 100%; margin-bottom: 16px; }
+
+  .chart-legend { display: flex; gap: 20px; margin-bottom: 20px; }
+  .legend-item { display: flex; align-items: center; gap: 7px; font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+  .result-meta { display: flex; align-items: center; justify-content: space-between; }
+  .result-context { font-size: 12px; color: var(--muted); }
+  .risk-badge {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 5px 12px; border-radius: var(--radius); border: 1px solid;
+  }
+  .risk-extreme { color: var(--danger); border-color: rgba(248,113,113,0.3); background: rgba(248,113,113,0.08); }
+  .risk-high { color: var(--warn); border-color: rgba(251,191,36,0.3); background: rgba(251,191,36,0.08); }
+  .risk-moderate { color: var(--cyan); border-color: var(--cyan-mid); background: var(--cyan-dim); }
+  .risk-low { color: var(--success); border-color: rgba(74,222,128,0.3); background: rgba(74,222,128,0.08); }
+
+  /* ─── COMPARE ─── */
+  .compare-config {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 14px; border-radius: var(--radius);
+    background: var(--bg3); border: 1px solid var(--border);
+    font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 20px;
+  }
+  .compare-config span { color: var(--cyan); }
+
+  .compare-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  @media (max-width: 520px) {
+    .compare-fields { grid-template-columns: 1fr; }
+    .compare-results { grid-template-columns: 1fr; }
+    .tabs-nav { overflow-x: auto; }
+    .tab-btn { padding: 14px 14px; font-size: 9px; white-space: nowrap; }
+    .result-stats { grid-template-columns: 1fr 1fr; }
+    .country-stats { grid-template-columns: 1fr 1fr; }
+    .header-title { font-size: 2rem; }
+  }
+  .compare-field-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+
+  .btn-compare {
+    width: 100%; padding: 12px;
+    font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
+    background: var(--bg3); color: var(--cyan); border: 1px solid var(--cyan-mid); border-radius: var(--radius);
+    cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+    margin-bottom: 24px;
+  }
+  .btn-compare:hover { background: var(--cyan-dim); border-color: var(--cyan); }
+
+  .compare-results { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .compare-col-header {
+    font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--text); padding-bottom: 10px;
+    border-bottom: 1px solid var(--border); margin-bottom: 14px;
+  }
+
+
 </style>
 </head>
 <body>
-<div class="grid-bg"></div>
-<div class="container">
-  <header>
-    <div>
-      <span class="logo-tag">// epidemiological model v2</span>
-      <h1>PATHOGEN<br>SIMULATOR</h1>
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-left">
+      <div class="header-eyebrow">// Epidemiological Model V2</div>
+      <div class="header-title">Pathogen<br>Simulator</div>
     </div>
-    <div class="status-badge"><div class="status-dot"></div>LIVE DATA</div>
+    <div class="header-right">
+      <div class="live-badge"><span class="live-dot"></span> Live Data</div>
+      <div class="api-input-wrap">
+        <span class="api-label">API</span>
+        <input class="api-input" type="text" id="apiUrl" value="https://virus-simula..." placeholder="API base URL">
+      </div>
+    </div>
   </header>
 
-  <div class="api-bar">
-    <span class="api-tag">API</span>
-    <input type="text" id="apiBase" value="https://virus-simulation.onrender.com">
-  </div>
+  <!-- CONFIGURE PANEL -->
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-dot"></div>
+      <span class="panel-title">Simulation Parameters</span>
+    </div>
+    <div class="panel-body">
 
-  <div class="main-grid">
-    <div>
-      <!-- Country Lookup -->
-      <div class="panel" style="margin-bottom:15px">
-        <div class="panel-hdr"><div class="pdot"></div><span class="ptitle">Country Lookup</span></div>
-        <div class="pbody">
-          <div class="field"><label>Country Name</label><input type="text" id="clInput" placeholder="e.g. Germany"></div>
-          <div class="err" id="clErr"></div>
-          <button class="btn btn-p" id="clBtn" onclick="lookupCountry()">⬡ FETCH DATA</button>
-          <div id="clResult" style="margin-top:12px"></div>
+      <!-- STEP 1: COUNTRY -->
+      <div class="step">
+        <div class="step-label"><div class="step-num">1</div> Country</div>
+        <div class="country-row">
+          <input class="field" type="text" id="countryInput" placeholder="e.g. Germany, Poland, Somalia">
+          <button class="btn-fetch" id="fetchBtn" onclick="fetchCountry()">
+            <span class="fetch-icon">◎</span> Fetch Data
+          </button>
+        </div>
+        <div class="country-card" id="countryCard">
+          <div class="country-card-name" id="countryCardName">—</div>
+          <div class="country-stats">
+            <div class="cstat"><div class="cstat-label">Population</div><div class="cstat-value" id="cstatPop">—</div></div>
+            <div class="cstat"><div class="cstat-label">Density</div><div class="cstat-value" id="cstatDensity">—</div></div>
+            <div class="cstat"><div class="cstat-label">Healthcare</div><div class="cstat-value" id="cstatHealth">—</div></div>
+            <div class="cstat"><div class="cstat-label">R₀ modifier</div><div class="cstat-value" id="cstatR0">—</div></div>
+          </div>
         </div>
       </div>
 
-      <!-- Simulate -->
-      <div class="panel">
-        <div class="panel-hdr"><div class="pdot"></div><span class="ptitle">Simulation Parameters</span></div>
-        <div class="pbody">
-          <div class="field"><label>Country</label><input type="text" id="simCountry" placeholder="e.g. Poland, Somalia"></div>
-          <div class="field">
-            <label>Virus</label>
-            <div class="vgrid">
-              <button class="voption selected" data-virus="Black_Plague" onclick="selVirus(this,'sim')"><div class="vname">Black Plague</div><div class="vmeta">Mortality 70%</div></button>
-              <button class="voption" data-virus="Ebola" onclick="selVirus(this,'sim')"><div class="vname">Ebola</div><div class="vmeta">Mortality 50%</div></button>
-              <button class="voption" data-virus="COVID" onclick="selVirus(this,'sim')"><div class="vname">COVID-19</div><div class="vmeta">Mortality 2%</div></button>
-              <button class="voption" data-virus="Spanish_Flu" onclick="selVirus(this,'sim')"><div class="vname">Spanish Flu</div><div class="vmeta">Mortality 10%</div></button>
-              <button class="voption" data-virus="Smallpox" onclick="selVirus(this,'sim')"><div class="vname">Smallpox</div><div class="vmeta">Mortality 30%</div></button>
-              <button class="voption" data-virus="Cholera" onclick="selVirus(this,'sim')"><div class="vname">Cholera</div><div class="vmeta">Mortality 25%</div></button>
+      <hr class="step-divider">
+
+      <!-- STEP 2: VIRUS -->
+      <div class="step">
+        <div class="step-label"><div class="step-num">2</div> Pathogen</div>
+        <div class="virus-chips" id="virusChips">
+          <div class="virus-chip selected" data-virus="Black Plague" data-mortality="70" data-beta="0.28" data-gamma="0.04" data-severity="critical" onclick="selectVirus(this)">
+            <span class="chip-name">Black Plague</span><span class="chip-mortality">Mortality 70%</span>
+          </div>
+          <div class="virus-chip" data-virus="Ebola" data-mortality="50" data-beta="0.20" data-gamma="0.09" data-severity="critical" onclick="selectVirus(this)">
+            <span class="chip-name">Ebola</span><span class="chip-mortality">Mortality 50%</span>
+          </div>
+          <div class="virus-chip" data-virus="COVID-19" data-mortality="2" data-beta="0.25" data-gamma="0.14" data-severity="moderate" onclick="selectVirus(this)">
+            <span class="chip-name">COVID-19</span><span class="chip-mortality">Mortality 2%</span>
+          </div>
+          <div class="virus-chip" data-virus="Spanish Flu" data-mortality="10" data-beta="0.35" data-gamma="0.18" data-severity="high" onclick="selectVirus(this)">
+            <span class="chip-name">Spanish Flu</span><span class="chip-mortality">Mortality 10%</span>
+          </div>
+          <div class="virus-chip" data-virus="Smallpox" data-mortality="30" data-beta="0.16" data-gamma="0.07" data-severity="high" onclick="selectVirus(this)">
+            <span class="chip-name">Smallpox</span><span class="chip-mortality">Mortality 30%</span>
+          </div>
+          <div class="virus-chip" data-virus="Cholera" data-mortality="25" data-beta="0.18" data-gamma="0.11" data-severity="high" onclick="selectVirus(this)">
+            <span class="chip-name">Cholera</span><span class="chip-mortality">Mortality 25%</span>
+          </div>
+        </div>
+      </div>
+
+      <hr class="step-divider">
+
+      <!-- STEP 3: DURATION -->
+      <div class="step">
+        <div class="step-label"><div class="step-num">3</div> Duration</div>
+        <div class="slider-wrap">
+          <div class="slider-meta">
+            <div><span class="slider-value" id="durationVal">365</span><span class="slider-unit">days</span></div>
+          </div>
+          <input type="range" id="durationSlider" min="30" max="730" step="1" value="365" oninput="updateDuration(this.value)">
+          <div class="slider-range-labels">
+            <span class="slider-range-label">30 days</span>
+            <span class="slider-range-label">730 days</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-run" id="runBtn" onclick="runSimulation()">▶ Run Simulation</button>
+    </div>
+  </div>
+
+  <!-- OUTPUT TABS -->
+  <div>
+    <div class="tabs-nav">
+      <button class="tab-btn active" onclick="switchTab('results', this)">Results</button>
+      <button class="tab-btn" onclick="switchTab('compare', this)">Compare</button>
+
+    </div>
+    <div class="tabs-body">
+
+      <!-- RESULTS TAB -->
+      <div class="tab-pane active" id="tab-results">
+        <div id="resultsEmpty" class="empty-state">
+          <svg class="empty-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <hexagon points="20,2 36,11 36,29 20,38 4,29 4,11" stroke="#64748b" stroke-width="1.5" fill="none"/>
+            <path d="M20 2 L36 11 L36 29 L20 38 L4 29 L4 11 Z" stroke="#64748b" stroke-width="1.5" fill="none"/>
+            <circle cx="20" cy="20" r="5" stroke="#64748b" stroke-width="1.5"/>
+          </svg>
+          <div class="empty-title">No simulation active</div>
+          <div class="empty-sub">Enter a country and pathogen, then run</div>
+        </div>
+        <div id="resultsContent" style="display:none">
+          <div class="result-stats">
+            <div class="stat-card"><div class="stat-label">Peak Infected</div><div class="stat-value cyan" id="rPeak">—</div></div>
+            <div class="stat-card"><div class="stat-label">Total Deaths</div><div class="stat-value danger" id="rDeaths">—</div></div>
+            <div class="stat-card"><div class="stat-label">Days to Peak</div><div class="stat-value" id="rDaysPeak">—</div></div>
+            <div class="stat-card"><div class="stat-label">R₀</div><div class="stat-value warn" id="rR0">—</div></div>
+          </div>
+          <div class="chart-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#00e8c6"></div>Susceptible</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#f87171"></div>Infected</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#94a3b8"></div>Recovered / Removed</div>
+          </div>
+          <div class="chart-wrap"><canvas id="sirChart" role="img" aria-label="SIR epidemic curve showing susceptible, infected and recovered populations over time">SIR epidemic model chart</canvas></div>
+          <div class="result-meta">
+            <span class="result-context" id="rContext">—</span>
+            <span class="risk-badge" id="rRisk">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- COMPARE TAB -->
+      <div class="tab-pane" id="tab-compare">
+        <div class="compare-config">
+          Using: <span id="cmpVirus">Black Plague</span> &nbsp;/&nbsp; <span id="cmpDays">365</span> days
+        </div>
+        <div class="compare-fields">
+          <div>
+            <div class="compare-field-label">Country 1</div>
+            <input class="field" type="text" id="cmp1" placeholder="e.g. Poland">
+          </div>
+          <div>
+            <div class="compare-field-label">Country 2</div>
+            <input class="field" type="text" id="cmp2" placeholder="e.g. Somalia">
+          </div>
+        </div>
+        <button class="btn-compare" onclick="runCompare()">◎ Compare Countries</button>
+        <div id="compareEmpty" class="empty-state" style="padding: 32px 20px">
+          <div class="empty-title">Enter two countries to compare outbreaks</div>
+        </div>
+        <div id="compareContent" style="display:none">
+          <div class="compare-results">
+            <div>
+              <div class="compare-col-header" id="cmpName1">Country 1</div>
+              <div class="chart-wrap" style="height:220px"><canvas id="cmpChart1" role="img" aria-label="Epidemic curve for country 1">Country 1 SIR chart</canvas></div>
+              <div class="result-stats" style="grid-template-columns:1fr 1fr; margin-top:12px">
+                <div class="stat-card"><div class="stat-label">Peak</div><div class="stat-value cyan" id="cmp1Peak">—</div></div>
+                <div class="stat-card"><div class="stat-label">Deaths</div><div class="stat-value danger" id="cmp1Deaths">—</div></div>
+              </div>
+            </div>
+            <div>
+              <div class="compare-col-header" id="cmpName2">Country 2</div>
+              <div class="chart-wrap" style="height:220px"><canvas id="cmpChart2" role="img" aria-label="Epidemic curve for country 2">Country 2 SIR chart</canvas></div>
+              <div class="result-stats" style="grid-template-columns:1fr 1fr; margin-top:12px">
+                <div class="stat-card"><div class="stat-label">Peak</div><div class="stat-value cyan" id="cmp2Peak">—</div></div>
+                <div class="stat-card"><div class="stat-label">Deaths</div><div class="stat-value danger" id="cmp2Deaths">—</div></div>
+              </div>
             </div>
           </div>
-          <div class="field">
-            <label>Duration</label>
-            <div class="ddays" id="ddays">365</div>
-            <input type="range" id="dslider" min="30" max="730" value="365" oninput="document.getElementById('ddays').textContent=this.value">
-            <div class="dlabel">DAYS</div>
-          </div>
-          <div class="err" id="simErr"></div>
-          <button class="btn btn-p" id="simBtn" onclick="runSim()">▶ RUN SIMULATION</button>
         </div>
       </div>
-    </div>
 
-    <!-- Right panel -->
-    <div class="panel">
-      <div class="tabs">
-        <button class="tab active" onclick="swTab('results',this)">Results</button>
-        <button class="tab" onclick="swTab('compare',this)">Compare</button>
-        <button class="tab" onclick="swTab('history',this)">Sim History</button>
-        <button class="tab" onclick="swTab('countries',this)">Countries</button>
-      </div>
 
-      <div class="tc active" id="tab-results">
-        <div class="loading" id="simLoad"><div class="loader"></div><div class="ltxt">RUNNING SIMULATION...</div></div>
-        <div id="simResult"><div class="empty"><div class="ei">⬡</div><div class="et">NO SIMULATION ACTIVE<br><br>ENTER A COUNTRY AND VIRUS<br>THEN RUN</div></div></div>
-      </div>
 
-      <!-- Compare tab — updated for new endpoint -->
-      <div class="tc" id="tab-compare">
-        <div class="cmp-inputs">
-          <div class="field" style="margin:0"><label>Country 1</label><input type="text" id="cmpCountry1" placeholder="e.g. Poland"></div>
-          <div class="field" style="margin:0"><label>Country 2</label><input type="text" id="cmpCountry2" placeholder="e.g. Somalia"></div>
-        </div>
-        <div class="field" style="margin-bottom:10px">
-          <label>Virus</label>
-          <div class="cmp-vgrid">
-            <button class="voption selected" data-virus="Black_Plague" onclick="selVirus(this,'cmp')"><div class="vname">Black Plague</div><div class="vmeta">Mortality 70%</div></button>
-            <button class="voption" data-virus="Ebola" onclick="selVirus(this,'cmp')"><div class="vname">Ebola</div><div class="vmeta">Mortality 50%</div></button>
-            <button class="voption" data-virus="COVID" onclick="selVirus(this,'cmp')"><div class="vname">COVID-19</div><div class="vmeta">Mortality 2%</div></button>
-            <button class="voption" data-virus="Spanish_Flu" onclick="selVirus(this,'cmp')"><div class="vname">Spanish Flu</div><div class="vmeta">Mortality 10%</div></button>
-            <button class="voption" data-virus="Smallpox" onclick="selVirus(this,'cmp')"><div class="vname">Smallpox</div><div class="vmeta">Mortality 30%</div></button>
-            <button class="voption" data-virus="Cholera" onclick="selVirus(this,'cmp')"><div class="vname">Cholera</div><div class="vmeta">Mortality 25%</div></button>
-          </div>
-        </div>
-        <div class="field" style="margin-bottom:13px">
-          <label>Duration</label>
-          <div class="cmp-days" id="cmpDays">365</div>
-          <input type="range" id="cmpSlider" min="30" max="730" value="365" oninput="document.getElementById('cmpDays').textContent=this.value">
-          <div class="dlabel">DAYS</div>
-        </div>
-        <div class="err" id="cmpErr"></div>
-        <button class="btn btn-p" id="cmpBtn" onclick="runCmp()" style="margin-bottom:16px">⬡ COMPARE COUNTRIES</button>
-        <div class="loading" id="cmpLoad"><div class="loader"></div><div class="ltxt">RUNNING SIMULATIONS...</div></div>
-        <div id="cmpResult"><div class="empty"><div class="ei">⬡</div><div class="et">ENTER TWO COUNTRIES AND A VIRUS<br>TO COMPARE OUTBREAKS</div></div></div>
-      </div>
-
-      <div class="tc" id="tab-history">
-        <div class="rtbar"><span class="rcount" id="simCnt">—</span><button class="btn btn-o btn-sm" onclick="loadHist()">↻ REFRESH</button></div>
-        <div class="loading" id="histLoad"><div class="loader"></div><div class="ltxt">LOADING...</div></div>
-        <div id="histResult"><div class="empty"><div class="ei">⬡</div><div class="et">CLICK REFRESH TO LOAD<br>ALL PAST SIMULATIONS</div></div></div>
-      </div>
-
-      <div class="tc" id="tab-countries">
-        <div class="rtbar"><span class="rcount" id="ctryCnt">—</span><button class="btn btn-o btn-sm" onclick="loadCtries()">↻ REFRESH</button></div>
-        <div class="loading" id="ctryLoad"><div class="loader"></div><div class="ltxt">LOADING...</div></div>
-        <div id="ctryResult"><div class="empty"><div class="ei">⬡</div><div class="et">CLICK REFRESH TO LOAD<br>ALL COUNTRY SNAPSHOTS</div></div></div>
-      </div>
     </div>
   </div>
+
 </div>
 
 <script>
-let virus = 'Black_Plague';
-let cmpVirus = 'Black_Plague';
-let pieC = null, lineC = null, cmpC = null;
+// ─── STATE ───────────────────────────────────────────────
+let selectedVirus = { name: 'Black Plague', beta: 0.28, gamma: 0.04, mortality: 70, severity: 'critical' };
+let duration = 365;
+let countryData = null;
+let sirChartInstance = null;
+let cmpChart1Instance = null;
+let cmpChart2Instance = null;
 
-const base = () => document.getElementById('apiBase').value.replace(/\/$/,'');
-const fmt = n => { if(n==null)return'—'; if(n>=1e6)return(n/1e6).toFixed(2)+'M'; if(n>=1000)return(n/1000).toFixed(1)+'K'; return Number(n).toLocaleString(); };
-const pct = (v,t) => t ? ((v/t)*100).toFixed(1)+'%' : '0%';
-const aqiC = a => ['#00d084','#a8cc00','#ffd700','#ff9500','#ff3d5a'][Math.min(a-1,4)]||'#64748b';
-const aqiL = a => ['Good','Fair','Moderate','Poor','Very Poor'][Math.min(a-1,4)]||'Unknown';
+// Mock country database
+const MOCK_COUNTRIES = {
+  'germany':      { name: 'Germany',       population: 84000000, density: 237, healthcare: 82, r0mod: 0.95 },
+  'poland':       { name: 'Poland',        population: 38000000, density: 123, healthcare: 67, r0mod: 1.05 },
+  'somalia':      { name: 'Somalia',       population: 18000000, density: 29,  healthcare: 21, r0mod: 1.45 },
+  'india':        { name: 'India',         population: 1400000000, density: 480, healthcare: 55, r0mod: 1.25 },
+  'japan':        { name: 'Japan',         population: 125000000, density: 336, healthcare: 89, r0mod: 0.88 },
+  'brazil':       { name: 'Brazil',        population: 215000000, density: 25,  healthcare: 60, r0mod: 1.10 },
+  'usa':          { name: 'United States', population: 335000000, density: 36,  healthcare: 78, r0mod: 0.98 },
+  'united states':{ name: 'United States', population: 335000000, density: 36,  healthcare: 78, r0mod: 0.98 },
+  'uk':           { name: 'United Kingdom',population: 67000000,  density: 281, healthcare: 80, r0mod: 0.97 },
+  'united kingdom':{ name:'United Kingdom',population: 67000000,  density: 281, healthcare: 80, r0mod: 0.97 },
+  'france':       { name: 'France',        population: 68000000,  density: 124, healthcare: 83, r0mod: 0.94 },
+  'nigeria':      { name: 'Nigeria',       population: 220000000, density: 239, healthcare: 33, r0mod: 1.38 },
+  'china':        { name: 'China',         population: 1400000000,density: 153, healthcare: 65, r0mod: 1.10 },
+  'russia':       { name: 'Russia',        population: 144000000, density: 9,   healthcare: 61, r0mod: 1.08 },
+};
 
-function selVirus(el, panel) {
-  const group = panel === 'cmp' ? '.cmp-vgrid .voption' : '.vgrid .voption';
-  document.querySelectorAll(group).forEach(b => b.classList.remove('selected'));
+// ─── SIR MODEL ───────────────────────────────────────────
+function runSIR(population, beta, gamma, days, r0mod = 1.0) {
+  let S = population - 1, I = 1, R = 0;
+  const effectiveBeta = beta * r0mod;
+  const labels = [], dataS = [], dataI = [], dataR = [];
+  let peakI = 0, peakDay = 0;
+  for (let d = 0; d <= days; d++) {
+    const dS = -(effectiveBeta * S * I) / population;
+    const dI = (effectiveBeta * S * I) / population - gamma * I;
+    S = Math.max(0, S + dS);
+    I = Math.max(0, I + dI);
+    R = Math.max(0, population - S - I);
+    if (Math.round(I) > peakI) { peakI = Math.round(I); peakDay = d; }
+    if (d % Math.max(1, Math.floor(days / 120)) === 0) {
+      labels.push(d === 0 ? '0' : d);
+      dataS.push(Math.round(S));
+      dataI.push(Math.round(I));
+      dataR.push(Math.round(R));
+    }
+  }
+  const totalRemoved = Math.round(R);
+  return { labels, dataS, dataI, dataR, peakI, peakDay, totalRemoved };
+}
+
+function fmt(n) {
+  if (n >= 1e9) return (n/1e9).toFixed(1) + 'B';
+  if (n >= 1e6) return (n/1e6).toFixed(1) + 'M';
+  if (n >= 1e3) return (n/1e3).toFixed(0) + 'K';
+  return n.toString();
+}
+
+// ─── INTERACTIONS ────────────────────────────────────────
+function updateDuration(val) {
+  duration = parseInt(val);
+  document.getElementById('durationVal').textContent = duration;
+  document.getElementById('cmpDays').textContent = duration;
+}
+
+function selectVirus(el) {
+  document.querySelectorAll('.virus-chip').forEach(c => c.classList.remove('selected'));
   el.classList.add('selected');
-  if (panel === 'cmp') cmpVirus = el.dataset.virus;
-  else virus = el.dataset.virus;
+  selectedVirus = {
+    name: el.dataset.virus,
+    beta: parseFloat(el.dataset.beta),
+    gamma: parseFloat(el.dataset.gamma),
+    mortality: parseInt(el.dataset.mortality),
+    severity: el.dataset.severity,
+  };
+  document.getElementById('cmpVirus').textContent = selectedVirus.name;
 }
 
-function swTab(name, el) {
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.tc').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('tab-'+name).classList.add('active');
+function switchTab(tabId, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + tabId).classList.add('active');
 }
 
-function showErr(id, msg) { const e=document.getElementById(id); e.textContent=msg; e.classList.add('active'); }
-function hideErr(id) { document.getElementById(id).classList.remove('active'); }
+// ─── COUNTRY FETCH ────────────────────────────────────────
+async function fetchCountry() {
+  const raw = document.getElementById('countryInput').value.trim().toLowerCase();
+  if (!raw) return;
+  const btn = document.getElementById('fetchBtn');
+  btn.classList.add('loading');
+  btn.innerHTML = '<span class="fetch-icon">◌</span> Fetching…';
 
-// Country Lookup
-async function lookupCountry() {
-  const c = document.getElementById('clInput').value.trim();
-  hideErr('clErr');
-  if(!c){showErr('clErr','Enter a country name');return;}
-  const btn = document.getElementById('clBtn');
-  btn.disabled=true; btn.textContent='FETCHING...';
-  document.getElementById('clResult').innerHTML='';
-  try {
-    const r = await fetch(`${base()}/${encodeURIComponent(c)}`);
-    if(!r.ok) throw new Error('Country not found');
-    const d = await r.json();
-    const aqip = (d.air_quality/5)*100;
-    document.getElementById('clResult').innerHTML=`
-      <div class="ccrd">
-        <div class="cctitle">${d.country.toUpperCase()}</div>
-        <div class="ccrow"><span class="cck">Temperature</span><span class="ccv">${d.temperature?.toFixed(1)}°C</span></div>
-        <div class="ccrow"><span class="cck">Humidity</span><span class="ccv">${d.humidity}%</span></div>
-        <div class="ccrow"><span class="cck">Population</span><span class="ccv">${fmt(d.population)}</span></div>
-        <div class="ccrow"><span class="cck">Density</span><span class="ccv">${d.density?.toFixed(1)} /km²</span></div>
-        <div class="ccrow"><span class="cck">Healthcare</span><span class="ccv" style="color:var(--accent)">${(d.healthcare*100).toFixed(0)}%</span></div>
-        <div class="ccrow" style="flex-direction:column;align-items:flex-start;gap:3px">
-          <div style="display:flex;justify-content:space-between;width:100%"><span class="cck">Air Quality</span><span class="ccv" style="color:${aqiC(d.air_quality)}">${aqiL(d.air_quality)}</span></div>
-          <div class="aqibar" style="width:100%"><div class="aqifill" style="width:${aqip}%;background:${aqiC(d.air_quality)}"></div></div>
-        </div>
-      </div>`;
-  } catch(e){showErr('clErr',e.message||'Failed');}
-  finally{btn.disabled=false;btn.textContent='⬡ FETCH DATA';}
-}
+  await new Promise(r => setTimeout(r, 700)); // simulate API delay
 
-// Simulation
-async function runSim() {
-  const country = document.getElementById('simCountry').value.trim();
-  const days = document.getElementById('dslider').value;
-  hideErr('simErr');
-  if(!country){showErr('simErr','Enter a country name');return;}
-  const btn=document.getElementById('simBtn');
-  btn.disabled=true;
-  document.getElementById('simLoad').classList.add('active');
-  document.getElementById('simResult').innerHTML='';
-  try {
-    const r = await fetch(`${base()}/sim/${encodeURIComponent(country)}/${virus}/${days}`,{method:'POST'});
-    if(!r.ok){const d=await r.json();throw new Error(d.detail||'Failed');}
-    renderSim(await r.json());
-  } catch(e){showErr('simErr',e.message||'Error');document.getElementById('simResult').innerHTML='<div class="empty"><div class="et">SIMULATION FAILED</div></div>';}
-  finally{btn.disabled=false;document.getElementById('simLoad').classList.remove('active');}
-}
+  const data = MOCK_COUNTRIES[raw];
+  btn.classList.remove('loading');
+  btn.innerHTML = '<span class="fetch-icon">◎</span> Fetch Data';
 
-function renderSim(data) {
-  const s=data.simulation, pop=s.healthy+s.infected+s.recovered+s.dead, h=s.history||[];
-  if(pieC){pieC.destroy();pieC=null;} if(lineC){lineC.destroy();lineC=null;}
-  document.getElementById('simResult').innerHTML=`
-    <div class="meta">
-      <div class="chip">Country <span>${data.country}</span></div>
-      <div class="chip">Virus <span>${data.virus}</span></div>
-      <div class="chip">Days <span>${h.length}</span></div>
-    </div>
-    <div class="srow">
-      <div class="sc h"><div class="slabel">Healthy</div><div class="sval">${fmt(s.healthy)}</div><div class="spct">${pct(s.healthy,pop)}</div></div>
-      <div class="sc i"><div class="slabel">Infected</div><div class="sval">${fmt(s.infected)}</div><div class="spct">${pct(s.infected,pop)}</div></div>
-      <div class="sc r"><div class="slabel">Recovered</div><div class="sval">${fmt(s.recovered)}</div><div class="spct">${pct(s.recovered,pop)}</div></div>
-      <div class="sc d"><div class="slabel">Dead</div><div class="sval">${fmt(s.dead)}</div><div class="spct">${pct(s.dead,pop)}</div></div>
-    </div>
-    <div class="crow">
-      <div class="cw"><div class="ct">Final Outcome</div><canvas id="pieC" height="220"></canvas></div>
-      <div class="cw"><div class="ct">Epidemic Curve</div><canvas id="lineC" height="220"></canvas></div>
-    </div>`;
-
-  pieC = new Chart(document.getElementById('pieC').getContext('2d'),{
-    type:'doughnut',
-    data:{labels:['Healthy','Infected','Recovered','Dead'],datasets:[{data:[s.healthy,s.infected,s.recovered,s.dead],backgroundColor:['#00e5ff22','#ff950022','#00d08422','#ff3d5a22'],borderColor:['#00e5ff','#ff9500','#00d084','#ff3d5a'],borderWidth:2,hoverBackgroundColor:['#00e5ff44','#ff950044','#00d08444','#ff3d5a44']}]},
-    options:{cutout:'65%',plugins:{legend:{position:'bottom',labels:{color:'#64748b',font:{family:'Space Mono',size:10},padding:12,boxWidth:12}},tooltip:{callbacks:{label:c=>` ${fmt(c.raw)} (${pct(c.raw,pop)})`}}}}
-  });
-
-  if(h.length) {
-    const st=Math.max(1,Math.floor(h.length/60));
-    const sp=h.filter((_,i)=>i%st===0||i===h.length-1);
-    lineC = new Chart(document.getElementById('lineC').getContext('2d'),{
-      type:'line',
-      data:{labels:sp.map(d=>`Day ${d.day}`),datasets:[
-        {label:'Infected',data:sp.map(d=>d.infected),borderColor:'#ff9500',backgroundColor:'rgba(255,149,0,.08)',borderWidth:2,pointRadius:0,fill:true,tension:.4},
-        {label:'Dead',data:sp.map(d=>d.dead),borderColor:'#ff3d5a',backgroundColor:'rgba(255,61,90,.06)',borderWidth:2,pointRadius:0,fill:true,tension:.4},
-        {label:'Recovered',data:sp.map(d=>d.recovered),borderColor:'#00d084',backgroundColor:'rgba(0,208,132,.06)',borderWidth:2,pointRadius:0,fill:true,tension:.4}
-      ]},
-      options:{responsive:true,interaction:{intersect:false,mode:'index'},scales:{x:{ticks:{color:'#64748b',font:{family:'Space Mono',size:9},maxTicksLimit:8},grid:{color:'rgba(255,255,255,.04)'}},y:{ticks:{color:'#64748b',font:{family:'Space Mono',size:9},callback:v=>fmt(v)},grid:{color:'rgba(255,255,255,.04)'}}},plugins:{legend:{labels:{color:'#64748b',font:{family:'Space Mono',size:10},boxWidth:12}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.raw)}`}}}}
-    });
+  if (data) {
+    countryData = data;
+    document.getElementById('countryCardName').textContent = data.name;
+    document.getElementById('cstatPop').textContent = fmt(data.population);
+    document.getElementById('cstatDensity').textContent = data.density + '/km²';
+    document.getElementById('cstatHealth').textContent = data.healthcare + '/100';
+    document.getElementById('cstatR0').textContent = 'x' + data.r0mod.toFixed(2);
+    document.getElementById('countryCard').classList.add('visible');
+  } else {
+    countryData = null;
+    document.getElementById('countryCard').classList.remove('visible');
+    document.getElementById('countryInput').style.borderColor = 'rgba(248,113,113,0.5)';
+    setTimeout(() => { document.getElementById('countryInput').style.borderColor = ''; }, 1500);
   }
 }
 
-// Compare — updated for new endpoint
-async function runCmp() {
-  const country1 = document.getElementById('cmpCountry1').value.trim();
-  const country2 = document.getElementById('cmpCountry2').value.trim();
-  const days = document.getElementById('cmpSlider').value;
-  hideErr('cmpErr');
-  if(!country1||!country2){showErr('cmpErr','Enter both country names');return;}
-  const btn = document.getElementById('cmpBtn');
-  btn.disabled=true;
-  document.getElementById('cmpLoad').classList.add('active');
-  document.getElementById('cmpResult').innerHTML='';
-  try {
-    const r = await fetch(`${base()}/compare_sims/${encodeURIComponent(country1)}/${encodeURIComponent(country2)}/${cmpVirus}/${days}`);
-    if(!r.ok){const d=await r.json();throw new Error(d.detail||'Not found');}
-    renderCmp(await r.json(), country1, country2);
-  } catch(e){showErr('cmpErr',e.message||'Error');document.getElementById('cmpResult').innerHTML='<div class="empty"><div class="et">COMPARISON FAILED</div></div>';}
-  finally{btn.disabled=false;document.getElementById('cmpLoad').classList.remove('active');}
+document.getElementById('countryInput').addEventListener('keydown', e => { if (e.key === 'Enter') fetchCountry(); });
+
+// ─── RUN SIMULATION ──────────────────────────────────────
+function runSimulation() {
+  const rawCountry = document.getElementById('countryInput').value.trim().toLowerCase();
+  if (!rawCountry) {
+    document.getElementById('countryInput').focus();
+    document.getElementById('countryInput').style.borderColor = 'rgba(248,113,113,0.5)';
+    setTimeout(() => { document.getElementById('countryInput').style.borderColor = ''; }, 1500);
+    return;
+  }
+
+  const cd = countryData || { name: document.getElementById('countryInput').value.trim(), population: 10000000, r0mod: 1.0 };
+  const btn = document.getElementById('runBtn');
+  btn.classList.add('running');
+  btn.textContent = '◌ Running…';
+
+  setTimeout(() => {
+    btn.classList.remove('running');
+    btn.innerHTML = '▶ Run Simulation';
+
+    const sir = runSIR(cd.population, selectedVirus.beta, selectedVirus.gamma, duration, cd.r0mod || 1.0);
+    const deaths = Math.round(sir.totalRemoved * (selectedVirus.mortality / 100));
+    const r0 = (selectedVirus.beta / selectedVirus.gamma).toFixed(2);
+    const mortality = selectedVirus.mortality;
+
+    document.getElementById('rPeak').textContent = fmt(sir.peakI);
+    document.getElementById('rDeaths').textContent = fmt(deaths);
+    document.getElementById('rDaysPeak').textContent = sir.peakDay + 'd';
+    document.getElementById('rR0').textContent = r0;
+    document.getElementById('rContext').textContent =
+      selectedVirus.name + ' · ' + cd.name + ' (pop. ' + fmt(cd.population) + ') · ' + duration + ' days';
+
+    let riskClass, riskLabel;
+    if (mortality >= 50 || r0 > 4) { riskClass = 'risk-extreme'; riskLabel = 'Extreme Risk'; }
+    else if (mortality >= 25 || r0 > 2.5) { riskClass = 'risk-high'; riskLabel = 'High Risk'; }
+    else if (mortality >= 10 || r0 > 1.5) { riskClass = 'risk-moderate'; riskLabel = 'Moderate Risk'; }
+    else { riskClass = 'risk-low'; riskLabel = 'Low Risk'; }
+
+    const rRisk = document.getElementById('rRisk');
+    rRisk.className = 'risk-badge ' + riskClass;
+    rRisk.textContent = riskLabel;
+
+    renderSIRChart('sirChart', sirChartInstance, sir, (inst) => { sirChartInstance = inst; });
+
+    document.getElementById('resultsEmpty').style.display = 'none';
+    document.getElementById('resultsContent').style.display = 'block';
+
+    // Switch to results tab and scroll there
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn')[0].classList.add('active');
+    document.getElementById('tab-results').classList.add('active');
+
+    document.querySelector('.tabs-nav').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  }, 900);
 }
 
-function renderCmp(data, country1, country2) {
-  const s1=data.simulation1, s2=data.simulation2;
-  const p1=s1.healthy+s1.infected+s1.recovered+s1.dead;
-  const p2=s2.healthy+s2.infected+s2.recovered+s2.dead;
-  if(cmpC){cmpC.destroy();cmpC=null;}
-  document.getElementById('cmpResult').innerHTML=`
-    <div class="meta" style="margin-bottom:14px">
-      <div class="chip">Virus <span>${data.virus}</span></div>
-    </div>
-    <div class="cmpgrid">
-      <div class="cmpc">
-        <div class="cmpct">${s1.country || country1}</div>
-        <div class="cmpr"><span class="cmpk">Healthy</span><span class="cmpv" style="color:var(--healthy)">${fmt(s1.healthy)} (${pct(s1.healthy,p1)})</span></div>
-        <div class="cmpr"><span class="cmpk">Infected</span><span class="cmpv" style="color:var(--infected)">${fmt(s1.infected)} (${pct(s1.infected,p1)})</span></div>
-        <div class="cmpr"><span class="cmpk">Recovered</span><span class="cmpv" style="color:var(--recovered)">${fmt(s1.recovered)} (${pct(s1.recovered,p1)})</span></div>
-        <div class="cmpr"><span class="cmpk">Dead</span><span class="cmpv" style="color:var(--dead)">${fmt(s1.dead)} (${pct(s1.dead,p1)})</span></div>
-      </div>
-      <div class="cmpc">
-        <div class="cmpct">${s2.country || country2}</div>
-        <div class="cmpr"><span class="cmpk">Healthy</span><span class="cmpv" style="color:var(--healthy)">${fmt(s2.healthy)} (${pct(s2.healthy,p2)})</span></div>
-        <div class="cmpr"><span class="cmpk">Infected</span><span class="cmpv" style="color:var(--infected)">${fmt(s2.infected)} (${pct(s2.infected,p2)})</span></div>
-        <div class="cmpr"><span class="cmpk">Recovered</span><span class="cmpv" style="color:var(--recovered)">${fmt(s2.recovered)} (${pct(s2.recovered,p2)})</span></div>
-        <div class="cmpr"><span class="cmpk">Dead</span><span class="cmpv" style="color:var(--dead)">${fmt(s2.dead)} (${pct(s2.dead,p2)})</span></div>
-      </div>
-    </div>
-    <div class="cw"><div class="ct">Side-by-Side Comparison</div><canvas id="cmpC" height="200"></canvas></div>`;
-
-  cmpC = new Chart(document.getElementById('cmpC').getContext('2d'),{
-    type:'bar',
-    data:{labels:['Healthy','Infected','Recovered','Dead'],datasets:[
-      {label:country1,data:[s1.healthy,s1.infected,s1.recovered,s1.dead],backgroundColor:['#00e5ff33','#ff950033','#00d08433','#ff3d5a33'],borderColor:['#00e5ff','#ff9500','#00d084','#ff3d5a'],borderWidth:2,borderRadius:4},
-      {label:country2,data:[s2.healthy,s2.infected,s2.recovered,s2.dead],backgroundColor:['#00e5ff1a','#ff95001a','#00d0841a','#ff3d5a1a'],borderColor:['#00e5ff88','#ff950088','#00d08488','#ff3d5a88'],borderWidth:2,borderRadius:4}
-    ]},
-    options:{responsive:true,scales:{x:{ticks:{color:'#64748b',font:{family:'Space Mono',size:10}},grid:{color:'rgba(255,255,255,.04)'}},y:{ticks:{color:'#64748b',font:{family:'Space Mono',size:9},callback:v=>fmt(v)},grid:{color:'rgba(255,255,255,.04)'}}},plugins:{legend:{labels:{color:'#64748b',font:{family:'Space Mono',size:10},boxWidth:12}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.raw)}`}}}}
+function renderSIRChart(canvasId, existingInstance, sir, callback) {
+  if (existingInstance) existingInstance.destroy();
+  const ctx = document.getElementById(canvasId).getContext('2d');
+  const instance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: sir.labels,
+      datasets: [
+        { label: 'Susceptible', data: sir.dataS, borderColor: '#00e8c6', backgroundColor: 'rgba(0,232,198,0.05)', borderWidth: 1.5, pointRadius: 0, tension: 0.4 },
+        { label: 'Infected',    data: sir.dataI, borderColor: '#f87171', backgroundColor: 'rgba(248,113,113,0.08)', borderWidth: 2,   pointRadius: 0, tension: 0.4, fill: true },
+        { label: 'Recovered',   data: sir.dataR, borderColor: '#94a3b8', backgroundColor: 'rgba(148,163,184,0.05)', borderWidth: 1.5, pointRadius: 0, tension: 0.4 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: {
+        mode: 'index', intersect: false,
+        backgroundColor: '#0d1018', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1,
+        titleColor: '#94a3b8', bodyColor: '#e2e8f0',
+        titleFont: { family: 'Space Mono', size: 10 },
+        callbacks: { label: ctx => ' ' + ctx.dataset.label + ': ' + fmt(ctx.raw) }
+      }},
+      scales: {
+        x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#64748b', font: { family: 'Space Mono', size: 10 }, maxTicksLimit: 10 } },
+        y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#64748b', font: { family: 'Space Mono', size: 10 }, callback: v => fmt(v) } },
+      }
+    }
   });
+  callback(instance);
 }
 
-// Sim History
-async function loadHist() {
-  document.getElementById('histLoad').classList.add('active');
-  document.getElementById('histResult').innerHTML='';
-  try {
-    const r=await fetch(`${base()}/sim/read_all`);
-    if(!r.ok) throw new Error();
-    const data=await r.json();
-    document.getElementById('simCnt').textContent=`${data.length} record${data.length!==1?'s':''}`;
-    if(!data.length){document.getElementById('histResult').innerHTML='<div class="empty"><div class="et">NO SIMULATIONS YET</div></div>';return;}
-    document.getElementById('histResult').innerHTML=`<div class="twrap"><table class="rtbl"><thead><tr><th>ID</th><th>Country</th><th>Virus</th><th>Dead</th><th>Recovered</th><th>Mortality</th></tr></thead><tbody>${
-      data.map(s=>{const pop=s.healthy+s.infected+s.recovered+s.dead;return`<tr><td style="color:var(--muted)">#${s.id}</td><td>${s.country}</td><td><span class="badge" style="background:rgba(0,229,255,.1);color:var(--accent)">${s.virus}</span></td><td style="color:var(--dead)">${fmt(s.dead)}</td><td style="color:var(--recovered)">${fmt(s.recovered)}</td><td style="color:var(--muted)">${pct(s.dead,pop)}</td></tr>`;}).join('')
-    }</tbody></table></div>`;
-  } catch{document.getElementById('histResult').innerHTML='<div class="empty"><div class="et">FAILED TO LOAD</div></div>';}
-  finally{document.getElementById('histLoad').classList.remove('active');}
+// ─── COMPARE ─────────────────────────────────────────────
+async function runCompare() {
+  const c1 = document.getElementById('cmp1').value.trim().toLowerCase();
+  const c2 = document.getElementById('cmp2').value.trim().toLowerCase();
+  if (!c1 || !c2) return;
+
+  const cd1 = MOCK_COUNTRIES[c1] || { name: document.getElementById('cmp1').value, population: 10000000, r0mod: 1.0 };
+  const cd2 = MOCK_COUNTRIES[c2] || { name: document.getElementById('cmp2').value, population: 10000000, r0mod: 1.0 };
+
+  const s1 = runSIR(cd1.population, selectedVirus.beta, selectedVirus.gamma, duration, cd1.r0mod || 1.0);
+  const s2 = runSIR(cd2.population, selectedVirus.beta, selectedVirus.gamma, duration, cd2.r0mod || 1.0);
+
+  document.getElementById('cmpName1').textContent = cd1.name;
+  document.getElementById('cmpName2').textContent = cd2.name;
+  document.getElementById('cmp1Peak').textContent = fmt(s1.peakI);
+  document.getElementById('cmp2Peak').textContent = fmt(s2.peakI);
+  document.getElementById('cmp1Deaths').textContent = fmt(Math.round(s1.totalRemoved * selectedVirus.mortality / 100));
+  document.getElementById('cmp2Deaths').textContent = fmt(Math.round(s2.totalRemoved * selectedVirus.mortality / 100));
+
+  renderSIRChart('cmpChart1', cmpChart1Instance, s1, i => cmpChart1Instance = i);
+  renderSIRChart('cmpChart2', cmpChart2Instance, s2, i => cmpChart2Instance = i);
+
+  document.getElementById('compareEmpty').style.display = 'none';
+  document.getElementById('compareContent').style.display = 'block';
 }
 
-// Countries
-async function loadCtries() {
-  document.getElementById('ctryLoad').classList.add('active');
-  document.getElementById('ctryResult').innerHTML='';
-  try {
-    const r=await fetch(`${base()}/country/read_all`);
-    if(!r.ok) throw new Error();
-    const data=await r.json();
-    document.getElementById('ctryCnt').textContent=`${data.length} snapshot${data.length!==1?'s':''}`;
-    if(!data.length){document.getElementById('ctryResult').innerHTML='<div class="empty"><div class="et">NO DATA YET</div></div>';return;}
-    document.getElementById('ctryResult').innerHTML=`<div class="twrap"><table class="rtbl"><thead><tr><th>ID</th><th>Country</th><th>Temp</th><th>Humidity</th><th>Population</th><th>Density</th><th>Healthcare</th><th>Air</th></tr></thead><tbody>${
-      data.map(c=>`<tr><td style="color:var(--muted)">#${c.id}</td><td>${c.country}</td><td>${c.temperature?.toFixed(1)}°C</td><td>${c.humidity}%</td><td>${fmt(c.population)}</td><td>${c.density?.toFixed(0)}/km²</td><td style="color:var(--accent)">${(c.healthcare_score*100).toFixed(0)}%</td><td style="color:${aqiC(c.air_quality)}">${aqiL(c.air_quality)}</td></tr>`).join('')
-    }</tbody></table></div>`;
-  } catch{document.getElementById('ctryResult').innerHTML='<div class="empty"><div class="et">FAILED TO LOAD</div></div>';}
-  finally{document.getElementById('ctryLoad').classList.remove('active');}
-}
+
 </script>
 </body>
 </html>
