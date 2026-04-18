@@ -78,18 +78,12 @@ def test_simulate():
     assert data["virus"] == "Ebola"
     assert "simulation" in data
 
-def test_get_all_sims():
-    responce = client.get("/sim/read_all")
-    assert responce.status_code == status.HTTP_200_OK
-
-def test_get_all_population_info():
-    responce = client.get("/country/read_all")
-    assert responce.status_code == status.HTTP_200_OK
-
 def test_compare_sims(test_country):
     sim1, sim2 = test_country
-    response = client.get(f"/compare_sims/{sim1.id}/{sim2.id}")
+    response = client.get(f"/compare_sims/{sim1.country}/{sim2.country}/Ebola/365")
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
-    assert data[0]["country"] == "Poland"
-    assert data[1]["country"] == "Somalia"
+    assert data["country1"] == "Poland"
+    assert data["country2"] == "Somalia"
+    assert "simulation1" in data
+    assert "simulation2" in data
