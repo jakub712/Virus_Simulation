@@ -659,59 +659,53 @@ async function fetchCountry() {
 document.getElementById('countryInput').addEventListener('keydown', e => { if (e.key === 'Enter') fetchCountry(); });
 
 // ─── RUN SIMULATION ──────────────────────────────────────
-function runSimulation() {
-  const rawCountry = document.getElementById('countryInput').value.trim().toLowerCase();
-  if (!rawCountry) {
+async function runSimulation() {
+  const country = document.getElementById('countryInput').value.trim();
+  if (!country) {
     document.getElementById('countryInput').focus();
     document.getElementById('countryInput').style.borderColor = 'rgba(248,113,113,0.5)';
     setTimeout(() => { document.getElementById('countryInput').style.borderColor = ''; }, 1500);
     return;
   }
-
-  const cd = countryData || MOCK_COUNTRIES[rawCountry] || { name: document.getElementById('countryInput').value.trim(), population: 10000000, r0mod: 1.0 };
   const btn = document.getElementById('runBtn');
   btn.classList.add('running');
   btn.textContent = '◌ Running…';
-
-  setTimeout(() => {
-    btn.classList.remove('running');
-    btn.innerHTML = '▶ Run Simulation';
-
-    const sir = runSIR(cd.population, selectedVirus.beta, selectedVirus.gamma, duration, cd.r0mod || 1.0);
-    const deaths = Math.round(sir.totalRemoved * (selectedVirus.mortality / 100));
-    const r0 = (selectedVirus.beta / selectedVirus.gamma).toFixed(2);
-    const mortality = selectedVirus.mortality;
-
-    document.getElementById('rPeak').textContent = fmt(sim.recovered);
+  try {
+    const res = await fetch(
+      `${getApiUrl()}/sim/${encodeURIComponent(country)}/${selectedVirus.api}/${duration}`,
+      { method: 'POST' }
+    );
+    if (!res.ok) throw new Error('failed');
+    const data = await res.json();
+    const sim = data.simulation;
+    const population = sim.healthy + sim.infected + sim.recovered + sim.dead;
+    const sirData = historyToSIR(sim.history);
+    document.getElementById('rPeak').textContent = (sirData.peakI / population * 100).toFixed(1) + '%';
     document.getElementById('rDeaths').textContent = fmt(sim.dead);
-
-    document.getElementById('rContext').textContent =
-      selectedVirus.name + ' · ' + cd.name + ' (pop. ' + fmt(cd.population) + ') · ' + duration + ' days';
-
+    document.getElementById('rR0').textContent = (sim.recovered / population * 100).toFixed(1) + '%';
+    document.getElementById('rContext').textContent = selectedVirus.name + ' · ' + data.country + ' · ' + duration + ' days';
+    const mortality = selectedVirus.mortality;
     let riskClass, riskLabel;
-    if (mortality >= 50 || r0 > 4) { riskClass = 'risk-extreme'; riskLabel = 'Extreme Risk'; }
-    else if (mortality >= 25 || r0 > 2.5) { riskClass = 'risk-high'; riskLabel = 'High Risk'; }
-    else if (mortality >= 10 || r0 > 1.5) { riskClass = 'risk-moderate'; riskLabel = 'Moderate Risk'; }
+    if (mortality >= 50) { riskClass = 'risk-extreme'; riskLabel = 'Extreme Risk'; }
+    else if (mortality >= 25) { riskClass = 'risk-high'; riskLabel = 'High Risk'; }
+    else if (mortality >= 10) { riskClass = 'risk-moderate'; riskLabel = 'Moderate Risk'; }
     else { riskClass = 'risk-low'; riskLabel = 'Low Risk'; }
-
     const rRisk = document.getElementById('rRisk');
     rRisk.className = 'risk-badge ' + riskClass;
     rRisk.textContent = riskLabel;
-
-    renderSIRChart('sirChart', sirChartInstance, sir, (inst) => { sirChartInstance = inst; });
-
+    renderSIRChart('sirChart', sirChartInstance, sirData, inst => { sirChartInstance = inst; });
     document.getElementById('resultsEmpty').style.display = 'none';
     document.getElementById('resultsContent').style.display = 'block';
-
-    // Switch to results tab and scroll there
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.tab-btn')[0].classList.add('active');
     document.getElementById('tab-results').classList.add('active');
-
     document.querySelector('.tabs-nav').scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-  }, 900);
+  } catch {
+    alert('Error: country not found or API unavailable.');
+  }
+  btn.classList.remove('running');
+  btn.innerHTML = '▶ Run Simulation';
 }
 
 function renderSIRChart(canvasId, existingInstance, sir, callback) {
