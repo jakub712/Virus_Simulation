@@ -434,9 +434,8 @@
         </div>
         <div id="resultsContent" style="display:none">
           <div class="result-stats">
-            <div class="stat-card"><div class="stat-label">Recovered</div><div class="stat-value cyan" id="rPeak">—</div></div>
             <div class="stat-card"><div class="stat-label">Total Deaths</div><div class="stat-value danger" id="rDeaths">—</div></div>
-            <div class="stat-card"><div class="stat-label">Recovered</div><div class="stat-value warn" id="rR0">—</div></div>
+            <div class="stat-card"><div class="stat-label">Recovered</div><div class="stat-value cyan" id="rR0">—</div></div>
           </div>
           <div class="chart-legend">
             <div class="legend-item"><div class="legend-dot" style="background:#00e8c6"></div>Susceptible</div>
@@ -697,9 +696,8 @@ async function runSimulation() {
     const sim = data.simulation;
     const population = sim.healthy + sim.infected + sim.recovered + sim.dead;
     const sirData = historyToSIR(sim.history);
-    document.getElementById('rPeak').textContent = (sirData.peakI / population * 100).toFixed(1) + '%';
     document.getElementById('rDeaths').textContent = fmt(sim.dead);
-    document.getElementById('rR0').textContent = (sim.recovered / population * 100).toFixed(1) + '%';
+    document.getElementById('rR0').textContent = fmt(sim.recovered);
     document.getElementById('rContext').textContent = selectedVirus.name + ' · ' + data.country + ' · ' + duration + ' days';
     const mortality = selectedVirus.mortality;
     let riskClass, riskLabel;
