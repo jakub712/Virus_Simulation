@@ -583,6 +583,23 @@ function getApiUrl() {
   return document.getElementById('apiUrl').value.trim().replace(/\/$/, '');
 }
 
+function historyToSIR(history) {
+  if (!history || history.length === 0) return { labels: [], dataS: [], dataI: [], dataR: [], peakI: 0 };
+  const step = Math.max(1, Math.floor(history.length / 120));
+  const labels = [], dataS = [], dataI = [], dataR = [];
+  let peakI = 0;
+  history.forEach((h, i) => {
+    if (h.infected > peakI) peakI = h.infected;
+    if (i % step === 0) {
+      labels.push(h.day);
+      dataS.push(h.healthy);
+      dataI.push(h.infected);
+      dataR.push(h.recovered);
+    }
+  });
+  return { labels, dataS, dataI, dataR, peakI };
+}
+
 function fmt(n) {
   if (n >= 1e9) return (n/1e9).toFixed(1) + 'B';
   if (n >= 1e6) return (n/1e6).toFixed(1) + 'M';
