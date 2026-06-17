@@ -162,8 +162,9 @@ def get_country_data(country: str, db:db_dependancy):
         beds = health["beds_per_1000"]
         sanitation = health["sanitation_percent"]
         score = calculate_healthcare_score(doctors, beds, sanitation)
-    except Exception:
-        raise HTTPException(status_code=404, detail="Country not found")
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        raise HTTPException(status_code=502, detail=f"sim failed: {type(e).__name__}: {e}")
 
     country_model = Population_Data(
         country = country,
