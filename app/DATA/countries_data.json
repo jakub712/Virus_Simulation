@@ -1,0 +1,1232 @@
+{
+  "Ivory Coast": {
+    "population": 25069229,
+    "area": 322463.0,
+    "lat": 7.5468,
+    "lon": -5.5471
+  },
+  "Italy": {
+    "population": 60421760,
+    "area": 301316.0,
+    "lat": 41.874,
+    "lon": 12.5641
+  },
+  "Kyrgyzstan": {
+    "population": 6322800,
+    "area": 199900.0,
+    "lat": 41.2055,
+    "lon": 74.7799
+  },
+  "Papua New Guinea": {
+    "population": 8606316,
+    "area": 462840.0,
+    "lat": -6.4883,
+    "lon": 148.403
+  },
+  "Fiji": {
+    "population": 896444,
+    "area": 18274,
+    "lat": -17.7,
+    "lon": 178.0
+  },
+  "United Arab Emirates": {
+    "population": 9630959,
+    "area": 83600.0,
+    "lat": 24.3588,
+    "lon": 53.9825
+  },
+  "Tanzania": {
+    "population": 56318348,
+    "area": 883749.0,
+    "lat": -6.3682,
+    "lon": 34.8852
+  },
+  "Togo": {
+    "population": 7889094,
+    "area": 56785.0,
+    "lat": 8.6217,
+    "lon": 0.8297
+  },
+  "Finland": {
+    "population": 5515525,
+    "area": 338145.0,
+    "lat": 64.9524,
+    "lon": 26.0689
+  },
+  "Malawi": {
+    "population": 18143315,
+    "area": 118484.0,
+    "lat": -13.2463,
+    "lon": 34.2954
+  },
+  "Mali": {
+    "population": 19077690,
+    "area": 1240192.0,
+    "lat": 17.5798,
+    "lon": -3.9988
+  },
+  "Uzbekistan": {
+    "population": 32955400,
+    "area": 447400.0,
+    "lat": 41.3797,
+    "lon": 64.5644
+  },
+  "Senegal": {
+    "population": 15854360,
+    "area": 196722.0,
+    "lat": 14.4994,
+    "lon": -14.4456
+  },
+  "Uganda": {
+    "population": 42723139,
+    "area": 241038.0,
+    "lat": 1.3652,
+    "lon": 32.3047
+  },
+  "Djibouti": {
+    "population": 958920,
+    "area": 23200.0,
+    "lat": 11.8084,
+    "lon": 42.5953
+  },
+  "Tuvalu": {
+    "population": 11508,
+    "area": 26.0,
+    "lat": -8.2216,
+    "lon": 177.964
+  },
+  "Japan": {
+    "population": 126529100,
+    "area": 377829.0,
+    "lat": 34.8863,
+    "lon": 134.38
+  },
+  "Belgium": {
+    "population": 11433256,
+    "area": 30518.0,
+    "lat": 50.4995,
+    "lon": 4.4754
+  },
+  "France": {
+    "population": 66977107,
+    "area": 551500.0,
+    "lat": 46.2322,
+    "lon": 2.2097
+  },
+  "Bulgaria": {
+    "population": 7025037,
+    "area": 110994.0,
+    "lat": 42.7298,
+    "lon": 25.4917
+  },
+  "Cyprus": {
+    "population": 1189265,
+    "area": 9251.0,
+    "lat": 35.1674,
+    "lon": 33.4355
+  },
+  "South Korea": {
+    "population": 51606633,
+    "area": 99434.0,
+    "lat": 35.9017,
+    "lon": 127.736
+  },
+  "Mexico": {
+    "population": 126190788,
+    "area": 1958201.0,
+    "lat": 23.6248,
+    "lon": -102.5787
+  },
+  "North Macedonia": {
+    "population": 2083459,
+    "area": 25713,
+    "lat": 41.6,
+    "lon": 21.7
+  },
+  "Guyana": {
+    "population": 779004,
+    "area": 214969.0,
+    "lat": 4.8663,
+    "lon": -58.9325
+  },
+  "Morocco": {
+    "population": 36029138,
+    "area": 446550.0,
+    "lat": 31.7923,
+    "lon": -7.0802
+  },
+  "Andorra": {
+    "population": 77006,
+    "area": 468.0,
+    "lat": 42.5422,
+    "lon": 1.5969
+  },
+  "Saudi Arabia": {
+    "population": 33699947,
+    "area": 2149690.0,
+    "lat": 23.8863,
+    "lon": 45.0812
+  },
+  "Comoros": {
+    "population": 832322,
+    "area": 1862.0,
+    "lat": -11.8751,
+    "lon": 43.877
+  },
+  "Cambodia": {
+    "population": 16249798,
+    "area": 181035.0,
+    "lat": 12.5478,
+    "lon": 104.984
+  },
+  "Jamaica": {
+    "population": 2934855,
+    "area": 10990.0,
+    "lat": 18.1153,
+    "lon": -77.2734
+  },
+  "Azerbaijan": {
+    "population": 9939800,
+    "area": 86600.0,
+    "lat": 40.1474,
+    "lon": 47.5721
+  },
+  "Niger": {
+    "population": 22442948,
+    "area": 1267000.0,
+    "lat": 17.611,
+    "lon": 8.0809
+  },
+  "Laos": {
+    "population": 7061507,
+    "area": 236800.0,
+    "lat": 18.2052,
+    "lon": 103.895
+  },
+  "Burkina Faso": {
+    "population": 19751535,
+    "area": 274000.0,
+    "lat": 12.2419,
+    "lon": -1.5568
+  },
+  "Luxembourg": {
+    "population": 607950,
+    "area": 2586.0,
+    "lat": 49.8157,
+    "lon": 6.1315
+  },
+  "Lebanon": {
+    "population": 6848925,
+    "area": 10400.0,
+    "lat": 33.8727,
+    "lon": 35.8768
+  },
+  "Turkey": {
+    "population": 82319724,
+    "area": 774815.0,
+    "lat": 38.9615,
+    "lon": 35.2518
+  },
+  "Zimbabwe": {
+    "population": 14439018,
+    "area": 390757.0,
+    "lat": -19.0132,
+    "lon": 29.1467
+  },
+  "South Africa": {
+    "population": 57779622,
+    "area": 1221037.0,
+    "lat": -28.4832,
+    "lon": 24.677
+  },
+  "Armenia": {
+    "population": 2951776,
+    "area": 29800.0,
+    "lat": 40.0662,
+    "lon": 45.1111
+  },
+  "Ireland": {
+    "population": 4867309,
+    "area": 70273.0,
+    "lat": 53.4198,
+    "lon": -8.2405
+  },
+  "Norway": {
+    "population": 5311916,
+    "area": 323877.0,
+    "lat": 64.583,
+    "lon": 17.8641
+  },
+  "Kenya": {
+    "population": 51393010,
+    "area": 580367.0,
+    "lat": 0.1709,
+    "lon": 37.904
+  },
+  "Afghanistan": {
+    "population": 37172386,
+    "area": 652090.0,
+    "lat": 33.9305,
+    "lon": 67.6789
+  },
+  "Spain": {
+    "population": 46796540,
+    "area": 505992.0,
+    "lat": 39.8958,
+    "lon": -2.4869
+  },
+  "Netherlands": {
+    "population": 17231624,
+    "area": 41526.0,
+    "lat": 52.133,
+    "lon": 5.2953
+  },
+  "Egypt": {
+    "population": 98423595,
+    "area": 1001449.0,
+    "lat": 26.6964,
+    "lon": 30.7982
+  },
+  "Gambia": {
+    "population": 2280102,
+    "area": 11295.0,
+    "lat": 13.4454,
+    "lon": -15.3115
+  },
+  "Brazil": {
+    "population": 209469333,
+    "area": 8547403.0,
+    "lat": -14.2429,
+    "lon": -53.1893
+  },
+  "Australia": {
+    "population": 24982688,
+    "area": 7741220.0,
+    "lat": -26.8534,
+    "lon": 133.275
+  },
+  "Madagascar": {
+    "population": 26262368,
+    "area": 587041.0,
+    "lat": -18.7772,
+    "lon": 46.8543
+  },
+  "United Kingdom": {
+    "population": 66460344,
+    "area": 242900.0,
+    "lat": 54.6332,
+    "lon": -3.4323
+  },
+  "Portugal": {
+    "population": 10283822,
+    "area": 91982.0,
+    "lat": 39.5578,
+    "lon": -7.8448
+  },
+  "Montenegro": {
+    "population": 622359,
+    "area": 13812,
+    "lat": 42.7,
+    "lon": 19.4
+  },
+  "Argentina": {
+    "population": 44494502,
+    "area": 2780400.0,
+    "lat": -38.4213,
+    "lon": -63.5874
+  },
+  "Cuba": {
+    "population": 11338138,
+    "area": 110861.0,
+    "lat": 21.527,
+    "lon": -79.5446
+  },
+  "Russia": {
+    "population": 144500000,
+    "area": 17098242,
+    "lat": 61.5,
+    "lon": 105.3
+  },
+  "India": {
+    "population": 1352617328,
+    "area": 3287263.0,
+    "lat": 21.1257,
+    "lon": 82.795
+  },
+  "Myanmar": {
+    "population": 53708395,
+    "area": 676578,
+    "lat": 21.9,
+    "lon": 95.96
+  },
+  "DR Congo": {
+    "population": 89561404,
+    "area": 2344858,
+    "lat": -4.0,
+    "lon": 21.8
+  },
+  "Ukraine": {
+    "population": 44622516,
+    "area": 603700.0,
+    "lat": 48.3799,
+    "lon": 31.1682
+  },
+  "Monaco": {
+    "population": 38682,
+    "area": 1.5,
+    "lat": 43.7383,
+    "lon": 7.4245
+  },
+  "Malaysia": {
+    "population": 31528585,
+    "area": 329758.0,
+    "lat": 4.1093,
+    "lon": 109.4557
+  },
+  "Somalia": {
+    "population": 15008154,
+    "area": 637657.0,
+    "lat": 5.1522,
+    "lon": 46.1996
+  },
+  "Central African Republic": {
+    "population": 4666377,
+    "area": 622984.0,
+    "lat": 6.6141,
+    "lon": 20.9417
+  },
+  "Macau": {
+    "population": 649335,
+    "area": 32.9,
+    "lat": 22.2,
+    "lon": 113.5
+  },
+  "Israel": {
+    "population": 8882800,
+    "area": 21056.0,
+    "lat": 31.4184,
+    "lon": 35.0735
+  },
+  "Nigeria": {
+    "population": 195874740,
+    "area": 923768.0,
+    "lat": 9.0846,
+    "lon": 8.6743
+  },
+  "Sierra Leone": {
+    "population": 7650154,
+    "area": 71740.0,
+    "lat": 8.4648,
+    "lon": -11.7959
+  },
+  "Tunisia": {
+    "population": 11565204,
+    "area": 163610.0,
+    "lat": 33.8922,
+    "lon": 9.5616
+  },
+  "Lithuania": {
+    "population": 2801543,
+    "area": 65301.0,
+    "lat": 55.1741,
+    "lon": 23.9067
+  },
+  "Iraq": {
+    "population": 38433600,
+    "area": 438317.0,
+    "lat": 33.2237,
+    "lon": 43.6859
+  },
+  "Switzerland": {
+    "population": 8513227,
+    "area": 41284.0,
+    "lat": 46.8155,
+    "lon": 8.2245
+  },
+  "Chile": {
+    "population": 18729160,
+    "area": 756626.0,
+    "lat": -36.7166,
+    "lon": -73.6017
+  },
+  "Vietnam": {
+    "population": 95540395,
+    "area": 331689.0,
+    "lat": 15.9742,
+    "lon": 105.8065
+  },
+  "Bangladesh": {
+    "population": 161356039,
+    "area": 143998.0,
+    "lat": 23.6876,
+    "lon": 90.351
+  },
+  "Latvia": {
+    "population": 1927174,
+    "area": 64589.0,
+    "lat": 56.8756,
+    "lon": 24.6077
+  },
+  "Malta": {
+    "population": 484630,
+    "area": 316.0,
+    "lat": 35.9442,
+    "lon": 14.38
+  },
+  "Greece": {
+    "population": 10731726,
+    "area": 131626.0,
+    "lat": 38.2753,
+    "lon": 23.8103
+  },
+  "Czechia": {
+    "population": 10650000,
+    "area": 78865,
+    "lat": 49.8,
+    "lon": 15.5
+  },
+  "Hong Kong": {
+    "population": 7451000,
+    "area": 1075.0,
+    "lat": 22.3565,
+    "lon": 114.1365
+  },
+  "United States": {
+    "population": 326687501,
+    "area": 9363520.0,
+    "lat": 36.9664,
+    "lon": -95.8439
+  },
+  "Eswatini": {
+    "population": 1160164,
+    "area": 17364,
+    "lat": -26.5,
+    "lon": 31.5
+  },
+  "Slovenia": {
+    "population": 2073894,
+    "area": 20256.0,
+    "lat": 46.1492,
+    "lon": 14.993
+  },
+  "Ghana": {
+    "population": 29767108,
+    "area": 238533.0,
+    "lat": 7.955,
+    "lon": -1.0318
+  },
+  "Paraguay": {
+    "population": 6956071,
+    "area": 406752.0,
+    "lat": -23.4513,
+    "lon": -58.4532
+  },
+  "Mozambique": {
+    "population": 29495962,
+    "area": 801590.0,
+    "lat": -18.6703,
+    "lon": 35.5302
+  },
+  "Palestine": {
+    "population": 4569087,
+    "area": 6257.0,
+    "lat": 31.8815,
+    "lon": 34.895
+  },
+  "Peru": {
+    "population": 31989256,
+    "area": 1285216.0,
+    "lat": -9.1813,
+    "lon": -75.0024
+  },
+  "Qatar": {
+    "population": 2781677,
+    "area": 11000.0,
+    "lat": 25.3188,
+    "lon": 51.1969
+  },
+  "Georgia": {
+    "population": 3726549,
+    "area": 69700.0,
+    "lat": 42.3199,
+    "lon": 43.368
+  },
+  "Ecuador": {
+    "population": 17084357,
+    "area": 283561.0,
+    "lat": -1.7799,
+    "lon": -78.1316
+  },
+  "Philippines": {
+    "population": 106651922,
+    "area": 300000.0,
+    "lat": 12.882,
+    "lon": 121.767
+  },
+  "Ethiopia": {
+    "population": 109224559,
+    "area": 1104300.0,
+    "lat": 9.1481,
+    "lon": 40.493
+  },
+  "Romania": {
+    "population": 19466145,
+    "area": 238391.0,
+    "lat": 45.9471,
+    "lon": 24.9806
+  },
+  "Nepal": {
+    "population": 28087871,
+    "area": 147181.0,
+    "lat": 28.395,
+    "lon": 84.1278
+  },
+  "Benin": {
+    "population": 11485048,
+    "area": 112622.0,
+    "lat": 9.322,
+    "lon": 2.3131
+  },
+  "Kuwait": {
+    "population": 4137309,
+    "area": 17818.0,
+    "lat": 29.3102,
+    "lon": 47.4935
+  },
+  "Suriname": {
+    "population": 575991,
+    "area": 163265.0,
+    "lat": 3.9179,
+    "lon": -56.032
+  },
+  "Chad": {
+    "population": 15477751,
+    "area": 1284000.0,
+    "lat": 15.4457,
+    "lon": 18.7381
+  },
+  "Bosnia and Herzegovina": {
+    "population": 3323929,
+    "area": 51197.0,
+    "lat": 43.8927,
+    "lon": 17.6705
+  },
+  "Trinidad and Tobago": {
+    "population": 1389858,
+    "area": 5130.0,
+    "lat": 10.6872,
+    "lon": -61.2208
+  },
+  "Sweden": {
+    "population": 10175214,
+    "area": 449964.0,
+    "lat": 62.1998,
+    "lon": 17.6375
+  },
+  "Croatia": {
+    "population": 4087843,
+    "area": 56538.0,
+    "lat": 44.4873,
+    "lon": 16.4603
+  },
+  "Mongolia": {
+    "population": 3170208,
+    "area": 1566500.0,
+    "lat": 46.861,
+    "lon": 103.8368
+  },
+  "São Tomé and Príncipe": {
+    "population": 219159,
+    "area": 964,
+    "lat": 0.19,
+    "lon": 6.6
+  },
+  "Yemen": {
+    "population": 28498687,
+    "area": 527968.0,
+    "lat": 15.5556,
+    "lon": 48.5315
+  },
+  "Colombia": {
+    "population": 49648685,
+    "area": 1138914.0,
+    "lat": 4.5773,
+    "lon": -74.2989
+  },
+  "Guinea-Bissau": {
+    "population": 1874309,
+    "area": 36125.0,
+    "lat": 11.8026,
+    "lon": -15.177
+  },
+  "Kiribati": {
+    "population": 115847,
+    "area": 726.0,
+    "lat": -3.3637,
+    "lon": 9.6705
+  },
+  "Germany": {
+    "population": 82905782,
+    "area": 357022.0,
+    "lat": 51.1657,
+    "lon": 10.4528
+  },
+  "Thailand": {
+    "population": 69428524,
+    "area": 513115.0,
+    "lat": 13.0366,
+    "lon": 101.4923
+  },
+  "Isle of Man": {
+    "population": 85033,
+    "area": 572,
+    "lat": 54.2,
+    "lon": -4.5
+  },
+  "Bhutan": {
+    "population": 754394,
+    "area": 47000.0,
+    "lat": 27.5157,
+    "lon": 90.4425
+  },
+  "Albania": {
+    "population": 2866376,
+    "area": 28748.0,
+    "lat": 41.157,
+    "lon": 20.1812
+  },
+  "New Zealand": {
+    "population": 4841000,
+    "area": 270534.0,
+    "lat": -40.8379,
+    "lon": -6.6425
+  },
+  "Algeria": {
+    "population": 42228429,
+    "area": 2381741.0,
+    "lat": 28.0268,
+    "lon": 1.6528
+  },
+  "San Marino": {
+    "population": 33785,
+    "area": 61.0,
+    "lat": 43.9429,
+    "lon": 12.46
+  },
+  "El Salvador": {
+    "population": 6420744,
+    "area": 21041.0,
+    "lat": 13.7969,
+    "lon": -88.9104
+  },
+  "Nauru": {
+    "population": 12704,
+    "area": 21.0,
+    "lat": -0.5283,
+    "lon": 166.922
+  },
+  "Tonga": {
+    "population": 103197,
+    "area": 650.0,
+    "lat": -18.5091,
+    "lon": -174.795
+  },
+  "Samoa": {
+    "population": 196130,
+    "area": 2831.0,
+    "lat": -13.7366,
+    "lon": -172.1075
+  },
+  "Denmark": {
+    "population": 5793636,
+    "area": 43094.0,
+    "lat": 56.1554,
+    "lon": 11.6172
+  },
+  "Venezuela": {
+    "population": 28870195,
+    "area": 912050.0,
+    "lat": 6.4141,
+    "lon": -66.579
+  },
+  "Austria": {
+    "population": 8840521,
+    "area": 83859.0,
+    "lat": 47.697,
+    "lon": 13.3465
+  },
+  "Slovakia": {
+    "population": 5446771,
+    "area": 49012.0,
+    "lat": 48.6656,
+    "lon": 19.709
+  },
+  "China": {
+    "population": 1392730000,
+    "area": 9572900.0,
+    "lat": 34.6681,
+    "lon": 104.1659
+  },
+  "Libya": {
+    "population": 6871292,
+    "area": 1759540,
+    "lat": 26.3,
+    "lon": 17.2
+  },
+  "Estonia": {
+    "population": 1321977,
+    "area": 45227.0,
+    "lat": 58.5962,
+    "lon": 25.0238
+  },
+  "Puerto Rico": {
+    "population": 3195153,
+    "area": 8875.0,
+    "lat": 18.2233,
+    "lon": -66.5927
+  },
+  "Belarus": {
+    "population": 9483499,
+    "area": 207600.0,
+    "lat": 53.7111,
+    "lon": 27.9738
+  },
+  "Dominican Republic": {
+    "population": 10627165,
+    "area": 48511.0,
+    "lat": 18.7366,
+    "lon": -70.1617
+  },
+  "Hungary": {
+    "population": 9775564,
+    "area": 93030.0,
+    "lat": 47.1647,
+    "lon": 19.5089
+  },
+  "Bahrain": {
+    "population": 1569439,
+    "area": 694.0,
+    "lat": 26.0397,
+    "lon": 50.5593
+  },
+  "Canada": {
+    "population": 37057765,
+    "area": 9970610.0,
+    "lat": 62.3933,
+    "lon": -96.8182
+  },
+  "Singapore": {
+    "population": 5638676,
+    "area": 618.0,
+    "lat": 1.3649,
+    "lon": 103.8225
+  },
+  "Costa Rica": {
+    "population": 4999441,
+    "area": 51100.0,
+    "lat": 9.6249,
+    "lon": -84.2533
+  },
+  "Serbia": {
+    "population": 6963764,
+    "area": 88361,
+    "lat": 44.0,
+    "lon": 21.0
+  },
+  "Poland": {
+    "population": 37974750,
+    "area": 323250.0,
+    "lat": 51.9228,
+    "lon": 19.1368
+  },
+  "Jordan": {
+    "population": 9956011,
+    "area": 88946.0,
+    "lat": 31.2768,
+    "lon": 37.1306
+  },
+  "Saint Kitts and Nevis": {
+    "population": 52441,
+    "area": 261.0,
+    "lat": 17.2577,
+    "lon": -62.7065
+  },
+  "Angola": {
+    "population": 30809762,
+    "area": 1246700.0,
+    "lat": -11.2095,
+    "lon": 17.8806
+  },
+  "South Sudan": {
+    "population": 10975920,
+    "area": 619745.0,
+    "lat": 7.8562,
+    "lon": 30.0404
+  },
+  "Oman": {
+    "population": 4829483,
+    "area": 309500.0,
+    "lat": 21.5169,
+    "lon": 55.8593
+  },
+  "Palau": {
+    "population": 17907,
+    "area": 459.0,
+    "lat": 5.6366,
+    "lon": 132.9205
+  },
+  "Guinea": {
+    "population": 12414318,
+    "area": 245857.0,
+    "lat": 9.9349,
+    "lon": -11.2838
+  },
+  "Turks and Caicos Islands": {
+    "population": 37665,
+    "area": 430.0,
+    "lat": 21.6923,
+    "lon": -71.8038
+  },
+  "Botswana": {
+    "population": 2254126,
+    "area": 581730.0,
+    "lat": -22.344,
+    "lon": 24.6802
+  },
+  "Belize": {
+    "population": 383071,
+    "area": 22696.0,
+    "lat": 17.1929,
+    "lon": -88.5009
+  },
+  "Saint Lucia": {
+    "population": 181889,
+    "area": 622.0,
+    "lat": 13.904,
+    "lon": -60.9742
+  },
+  "Mauritania": {
+    "population": 4403319,
+    "area": 1025520.0,
+    "lat": 21.0068,
+    "lon": -10.9471
+  },
+  "Cape Verde": {
+    "population": 555987,
+    "area": 4033,
+    "lat": 16.0,
+    "lon": -24.0
+  },
+  "Marshall Islands": {
+    "population": 58413,
+    "area": 181.0,
+    "lat": 10.1038,
+    "lon": 168.7285
+  },
+  "Namibia": {
+    "population": 2448255,
+    "area": 824292.0,
+    "lat": -22.9657,
+    "lon": 18.4861
+  },
+  "Iran": {
+    "population": 81800269,
+    "area": 1648195.0,
+    "lat": 32.4207,
+    "lon": 53.6824
+  },
+  "Indonesia": {
+    "population": 267663435,
+    "area": 1904569.0,
+    "lat": -2.5187,
+    "lon": 118.0156
+  },
+  "North Korea": {
+    "population": 25549819,
+    "area": 120538.0,
+    "lat": 40.3397,
+    "lon": 127.4955
+  },
+  "Bermuda": {
+    "population": 63973,
+    "area": 53.0,
+    "lat": 32.3202,
+    "lon": -64.774
+  },
+  "Nicaragua": {
+    "population": 6465513,
+    "area": 130000.0,
+    "lat": 12.8667,
+    "lon": -85.2143
+  },
+  "Lesotho": {
+    "population": 2108132,
+    "area": 30355.0,
+    "lat": -29.6206,
+    "lon": 28.2475
+  },
+  "Barbados": {
+    "population": 286641,
+    "area": 430.0,
+    "lat": 13.1836,
+    "lon": -59.5346
+  },
+  "Greenland": {
+    "population": 56025,
+    "area": 2166090.0,
+    "lat": 71.7024,
+    "lon": -42.1771
+  },
+  "Turkmenistan": {
+    "population": 5850908,
+    "area": 488100.0,
+    "lat": 38.9684,
+    "lon": 59.5628
+  },
+  "Dominica": {
+    "population": 71625,
+    "area": 751.0,
+    "lat": 15.4168,
+    "lon": -61.3641
+  },
+  "Solomon Islands": {
+    "population": 652858,
+    "area": 28896.0,
+    "lat": -9.2201,
+    "lon": 161.245
+  },
+  "Rwanda": {
+    "population": 12301939,
+    "area": 26338.0,
+    "lat": -1.9471,
+    "lon": 29.8764
+  },
+  "Panama": {
+    "population": 4176873,
+    "area": 75517.0,
+    "lat": 8.4177,
+    "lon": -80.1128
+  },
+  "Bahamas": {
+    "population": 385640,
+    "area": 13878.0,
+    "lat": 24.886,
+    "lon": -76.7099
+  },
+  "Cayman Islands": {
+    "population": 64174,
+    "area": 264.0,
+    "lat": 19.5124,
+    "lon": -80.58
+  },
+  "Kazakhstan": {
+    "population": 19000000,
+    "area": 2724900,
+    "lat": 48.0,
+    "lon": 66.9
+  },
+  "Mauritius": {
+    "population": 1265303,
+    "area": 2040.0,
+    "lat": -15.4225,
+    "lon": 60.0065
+  },
+  "Tajikistan": {
+    "population": 9100837,
+    "area": 143100.0,
+    "lat": 38.8582,
+    "lon": 71.2622
+  },
+  "Antigua and Barbuda": {
+    "population": 96286,
+    "area": 442.0,
+    "lat": 17.3632,
+    "lon": -61.7894
+  },
+  "Honduras": {
+    "population": 9587522,
+    "area": 112088.0,
+    "lat": 14.7463,
+    "lon": -86.2531
+  },
+  "Taiwan": {
+    "population": 23570000,
+    "area": 36193,
+    "lat": 23.7,
+    "lon": 121.0
+  },
+  "Vanuatu": {
+    "population": 292680,
+    "area": 12189.0,
+    "lat": -16.6611,
+    "lon": 168.215
+  },
+  "Pakistan": {
+    "population": 212215030,
+    "area": 796095.0,
+    "lat": 30.4419,
+    "lon": 69.3598
+  },
+  "Seychelles": {
+    "population": 96762,
+    "area": 455.0,
+    "lat": -7.0188,
+    "lon": 51.2512
+  },
+  "Montserrat": {
+    "population": 5900,
+    "area": 102.0,
+    "lat": 16.7495,
+    "lon": -62.1928
+  },
+  "Anguilla": {
+    "population": 15094,
+    "area": 96.0,
+    "lat": 18.2251,
+    "lon": -63.0722
+  },
+  "Zambia": {
+    "population": 17351822,
+    "area": 752618.0,
+    "lat": -13.1519,
+    "lon": 27.8526
+  },
+  "Maldives": {
+    "population": 515696,
+    "area": 298.0,
+    "lat": 3.1994,
+    "lon": 73.1653
+  },
+  "Moldova": {
+    "population": 2706049,
+    "area": 33851.0,
+    "lat": 46.9796,
+    "lon": 28.3772
+  },
+  "Liberia": {
+    "population": 4818977,
+    "area": 111369.0,
+    "lat": 6.4524,
+    "lon": -9.4286
+  },
+  "Liechtenstein": {
+    "population": 37910,
+    "area": 160.0,
+    "lat": 47.1595,
+    "lon": 9.5537
+  },
+  "Syria": {
+    "population": 16906283,
+    "area": 185180.0,
+    "lat": 34.8149,
+    "lon": 39.0561
+  },
+  "Guatemala": {
+    "population": 17247807,
+    "area": 108889.0,
+    "lat": 15.7763,
+    "lon": -90.2297
+  },
+  "Sudan": {
+    "population": 41801533,
+    "area": 1886068.0,
+    "lat": 15.4585,
+    "lon": 30.2176
+  },
+  "Uruguay": {
+    "population": 3449299,
+    "area": 175016.0,
+    "lat": -32.5315,
+    "lon": -55.7583
+  },
+  "Iceland": {
+    "population": 352721,
+    "area": 103000.0,
+    "lat": 64.9639,
+    "lon": -19.0211
+  },
+  "Haiti": {
+    "population": 11123176,
+    "area": 27750.0,
+    "lat": 19.0544,
+    "lon": -73.046
+  },
+  "Brunei": {
+    "population": 428962,
+    "area": 5765.0,
+    "lat": 4.5251,
+    "lon": 114.715
+  },
+  "Republic of the Congo": {
+    "population": 5518087,
+    "area": 342000,
+    "lat": -0.2,
+    "lon": 15.8
+  },
+  "Equatorial Guinea": {
+    "population": 1308974,
+    "area": 28051.0,
+    "lat": 1.6339,
+    "lon": 10.3413
+  },
+  "Gabon": {
+    "population": 2119275,
+    "area": 267668.0,
+    "lat": -0.8281,
+    "lon": 11.5989
+  },
+  "Sri Lanka": {
+    "population": 21803000,
+    "area": 65610,
+    "lat": 7.9,
+    "lon": 80.7
+  },
+  "Vatican City": {
+    "population": 800,
+    "area": 0.49,
+    "lat": 41.9,
+    "lon": 12.45
+  },
+  "Grenada": {
+    "population": 111454,
+    "area": 344.0,
+    "lat": 12.1526,
+    "lon": -61.6895
+  },
+  "Burundi": {
+    "population": 11175378,
+    "area": 27834.0,
+    "lat": -3.3879,
+    "lon": 29.9204
+  },
+  "Bolivia": {
+    "population": 11353142,
+    "area": 1098581.0,
+    "lat": -16.2883,
+    "lon": -63.5495
+  },
+  "Saint Vincent and the Grenadines": {
+    "population": 110210,
+    "area": 388.0,
+    "lat": 12.9809,
+    "lon": -61.2874
+  },
+  "Cameroon": {
+    "population": 25216237,
+    "area": 475442.0,
+    "lat": 7.3653,
+    "lon": 12.3434
+  },
+  "Eritrea": {
+    "population": 6213972,
+    "area": 117600.0,
+    "lat": 15.1814,
+    "lon": 39.7867
+  },
+  "Timor-Leste": {
+    "population": 1267972,
+    "area": 14874,
+    "lat": -8.8,
+    "lon": 125.7
+  }
+}

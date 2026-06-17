@@ -6,23 +6,26 @@ load_dotenv()
 
 
 
+
+_COUNTRY_DATA_PATH = os.path.join(os.path.dirname(__file__), "DATA", "countries_data.json")
+with open(_COUNTRY_DATA_PATH, "r", encoding="utf-8") as f:
+    _COUNTRY_DATA = json.load(f)
+
 def get_population_info(country):
-    url = f"https://restcountries.com/v3.1/name/{country}?fields=population,area,latlng"
-    response = requests.get(url)
-    data = response.json()[0]
-    population = data['population']
-    area = data['area']
+    rec = None
+    for name, data in _COUNTRY_DATA.items():
+        if name.lower() == country.lower():
+            rec = data
+            break
+    if rec is None:
+        raise ValueError(f"No country data for {country!r}")
+    population = rec["population"]
+    area = rec["area"]
     density = population / area
-    lat = data["latlng"][0]
-    lon = data["latlng"][1]
+    lat = rec["lat"]
+    lon = rec["lon"]
     air = get_air_quality(lat, lon)
-    return {
-        "population": population,
-        "density": density,
-        "lat": lat,
-        "lon": lon,
-        "air_quality": air
-    }
+    return {"population": population, "density": density, "lat": lat, "lon": lon, "air_quality": air}
 
 def get_weather_info(country):
     API_KEY = os.getenv("GET_WEATHER_API_KEY")
