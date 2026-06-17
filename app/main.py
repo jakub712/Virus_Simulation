@@ -152,12 +152,14 @@ def compare_simulations(db:db_dependancy, country1:str, country2:str, days:int =
 @app.get("/{country}", status_code=status.HTTP_200_OK)
 def get_country_data(country: str, db:db_dependancy):
     try:
-        temp = get_weather_info(country)['temperature']
-        humidity = get_weather_info(country)['humidity']
-        population = get_population_info(country)['population']
-        density = get_population_info(country)['density']
-        air_quality = get_population_info(country)['air_quality']
+        weather = get_weather_info(country)
+        pop = get_population_info(country)
         health = get_health_info(country)
+        temp = weather['temperature']
+        humidity = weather['humidity']
+        population = pop['population']
+        density = pop['density']
+        air_quality = pop['air_quality']
         doctors = health["doctors_per_1000"]
         beds = health["beds_per_1000"]
         sanitation = health["sanitation_percent"]
@@ -165,7 +167,7 @@ def get_country_data(country: str, db:db_dependancy):
     except Exception as e:
         import traceback; traceback.print_exc()
         raise HTTPException(status_code=502, detail=f"sim failed: {type(e).__name__}: {e}")
-
+    
     country_model = Population_Data(
         country = country,
         temperature = temp,
