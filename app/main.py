@@ -111,9 +111,9 @@ def compare_simulations(db:db_dependancy, country1:str, country2:str, days:int =
         density1 = max(density1, 75)
         density2 = max(density2, 75)
 
-    except Exception:
-        raise HTTPException(status_code=404, detail="Country not found")
-
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        raise HTTPException(status_code=502, detail=f"data fetch failed: {e}")
     try:
         v = VIRUSES.get(virus.lower())
         sim_results1 = virus_sim(v, temp1, humidity1, population1, density1, score1, sanitation1, days)
