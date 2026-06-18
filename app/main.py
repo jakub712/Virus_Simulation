@@ -44,13 +44,19 @@ def get_db():
 
 db_dependancy = Annotated[Session, Depends(get_db)]
 
+"""weather = get_weather_info(country)
+temp = weather['temperature']
+humidity = weather['humidity']"""
+
 @app.post("/sim/{country}/{virus}/{days}", status_code= status.HTTP_200_OK)
 def run_simulation(db:db_dependancy, country:str, days:int = Path(description="recomended is 365"), virus:str = Path(description="Options: Black_Plague, Ebola, COVID, Spanish_Flu, Smallpox, Cholera")):
     try:
-        temp = get_weather_info(country)['temperature']
-        humidity = get_weather_info(country)['humidity']
-        population = get_population_info(country)['population']
-        density = get_population_info(country)['density']
+        weather = get_weather_info(country)
+        pops = get_population_info(country)
+        temp = weather['temperature']
+        humidity = weather['humidity']
+        population = pops['population']
+        density = pops['density']
         health = get_health_info(country)
         doctors = health["doctors_per_1000"]
         beds = health["beds_per_1000"]
@@ -88,14 +94,18 @@ def run_simulation(db:db_dependancy, country:str, days:int = Path(description="r
 @app.get("/compare_sims/{country1}/{country2}/{virus}/{days}", status_code= status.HTTP_200_OK)
 def compare_simulations(db:db_dependancy, country1:str, country2:str, days:int = Path(description="recomended is 365"), virus:str = Path(description="Options: Black_Plague, Ebola, COVID, Spanish_Flu, Smallpox, Cholera")):
     try:
-        temp1 = get_weather_info(country1)['temperature']
-        temp2 = get_weather_info(country2)['temperature']
-        humidity1 = get_weather_info(country1)['humidity']
-        humidity2 = get_weather_info(country2)['humidity']
-        population1 = get_population_info(country1)['population']
-        population2 = get_population_info(country2)['population']
-        density1 = get_population_info(country1)['density']
-        density2 = get_population_info(country2)['density']
+        weather1 = get_weather_info(country1)
+        weather2 = get_weather_info(country2)
+        pop1 = get_population_info(country1)
+        pop2 = get_population_info(country2)
+        temp1 = weather1['temperature']
+        temp2 = weather2['temperature']
+        humidity1 = weather1['humidity']
+        humidity2 = weather2['humidity']
+        population1 = pop1['population']
+        population2 = pop2['population']
+        density1 = pop1['density']
+        density2 = pop2['density']
         health1 = get_health_info(country1)
         health2 = get_health_info(country2)
         doctors1 = health1["doctors_per_1000"]
